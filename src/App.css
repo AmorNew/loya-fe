@@ -36,3 +36,33 @@
     transform: rotate(360deg);
   }
 }
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 400;
+
+  /* Браузер сначала попробует найти шрифт локально */
+  src: local("IBMPlexSans"),
+       /* Если не получилось, загрузит woff2 */
+       url("../public/fonts/IBMPlexSans.woff2") format("woff2"),
+       /* Если браузер не поддерживает woff2, загрузит woff */
+       url("../public/fonts/IBMPlexSans.woff") format("woff");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 500;
+
+  /* Браузер сначала попробует найти шрифт локально */
+  src: local("IBMPlexSans"),
+       /* Если не получилось, загрузит woff2 */
+       url("../public/fonts/IBMPlexSans-SemiBold.woff2") format("woff2"),
+       /* Если браузер не поддерживает woff2, загрузит woff */
+       url("../public/fonts/IBMPlexSans-SemiBold.woff") format("woff");
+}
+
+body {
+  font-family: "IBM Plex Sans", "Arial", sans-serif;
+}

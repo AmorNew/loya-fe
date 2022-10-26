@@ -1,0 +1,33 @@
+.root {
+    box-sizing: border-box;
+
+    /* Auto layout */
+
+    display: flex;
+    flex-direction: column;
+    
+    padding: 40px 0px 0px;
+    gap: 16px;
+
+    width: 322px;
+    height: 100%;
+
+    background: #FFFFFF;
+    /* System Graph/Line Gray */
+
+    border: 1px solid #E1E4EB;
+    border-radius: 4px;
+}
+
+.listWrapper {
+    box-sizing: border-box;
+
+    /* Auto layout */
+
+    display: flex;
+    flex-direction: column;
+
+    height: 100%;
+    max-height: 100%;
+    overflow: auto;
+}
