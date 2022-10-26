@@ -1,0 +1,63 @@
+.root {
+    box-sizing: border-box;
+
+    /* Auto layout */
+
+    display: flex;
+    flex-direction: column;
+    
+    padding: 40px 0px 0px;
+    gap: 20px;
+
+    width: 322px;
+    height: 100%;
+
+    background: #FFFFFF;
+    /* System Graph/Line Gray */
+
+    border-right: 1px solid #E1E4EB;
+    flex-shrink: 0;
+}
+
+.root.hidden {
+    width: 0;
+}
+
+.metric {
+    margin: 0 12px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.metricName {
+    flex-basis: 40%;
+
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    
+    
+    /* System Text / Light Gray */
+    
+    color: #929BAD;
+}
+
+.metricValue {
+    flex-basis: 60%;
+    text-align: right;
+
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    /* identical to box height, or 125% */
+    
+    
+    /* Dark/Normal */
+    
+    color: #283844;
+}

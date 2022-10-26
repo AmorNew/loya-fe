@@ -1,0 +1,29 @@
+.page-layout {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-content: flex-start;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    /* overflow: hidden; */
+}
+
+.exit-button {
+    margin-left: 20px;
+    width: 130px;
+}
+
+.map {
+    display: block;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.leaflet-control-attribution.leaflet-control {
+    display: none;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}

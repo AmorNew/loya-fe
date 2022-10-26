@@ -6,7 +6,7 @@ import cn from 'classnames';
 import styles from './ObjectListItem.module.css';
 
 
-const ObjectListItem = ({model, mark, lastActive, groups, onClick, isCurrent}: any) => {
+const ObjectItem = ({model, mark, lastActive, groups, onClick, isCurrent}: any) => {
     return (
         <div className={cn(styles.root, {[styles.isCurrent]: isCurrent})} onClick={onClick}>
             <div className={styles.icon}>
@@ -29,4 +29,4 @@ const ObjectListItem = ({model, mark, lastActive, groups, onClick, isCurrent}: a
     );
 }
 
-export default ObjectListItem;
+export default ObjectItem;

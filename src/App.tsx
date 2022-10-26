@@ -7,6 +7,8 @@ import ory from "./pkg/sdk"
 
 import LoginPage from './pages/LoginPage';
 import MapPage from './pages/MapPage';
+import ObjectPage from './pages/ObjectPage';
+
 import PrivateRoute from './components/routing/PrivateRoute';
 
 import './App.css';
@@ -43,7 +45,8 @@ function App() {
       <Routes>
         <Route path='/' element={<PrivateRoute hasSession={hasSession} />}>
             <Route path='/' element={<MapPage/>}/>
-            <Route path='/card' element={<MapPage/>}/>
+            <Route path='/map' element={<MapPage/>}/>
+            <Route path='/object' element={<ObjectPage/>}/>
         </Route>
 
         <Route path="/login" element={<LoginPage setHasSession={setHasSession} />} />

@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import cn from 'classnames';
 
 import styles from './ObjectList.module.css';
-import ObjectListItem from "./components/ObjectListItem";
 import ObjectListFilters from "./components/ObjectListFilters";
+import ObjectItem from "../ObjectItem";
 
 
 const ObjectList = ({className, state, setCurrent}: any) => {
@@ -18,7 +18,7 @@ const ObjectList = ({className, state, setCurrent}: any) => {
                         const isCurrent = state.data.currentObjectId === objectId;
 
                         return (
-                            <ObjectListItem 
+                            <ObjectItem 
                                 key={object.id}
                                 isCurrent={isCurrent} 
                                 onClick={() => setCurrent(objectId)} 
