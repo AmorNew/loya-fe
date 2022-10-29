@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+
+import { Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet'
 
 import SideBar from '../../components/parts/SideBar';
@@ -9,6 +10,7 @@ import Button from '../../components/ui/Button';
 import './styles.css';
 import ObjectList from '../../components/parts/ObjectList';
 import Object from '../../components/parts/Object';
+import ObjectCard from '../../components/parts/ObjectCard';
 
 
 const currObjectsIds: any = [];
@@ -19,7 +21,7 @@ const objects = () => {
   const arr = [1,2,3,4,5,6,7,8,9,10];
 
   arr.forEach((i) => {
-    const id = `group-${i}`;
+    const id = `object-${i}`;
 
     currObjectsIds.push(id);
 
@@ -28,8 +30,9 @@ const objects = () => {
       icon: '',
       online: false,
       mark: 'Caterpillar',
-      model: '242B Series 3, 2022',
-      groupsIds: [],
+      model: `242B Series 3, ${2000 + i}`,
+      plate: `A${770 + i}AA99`,
+      groupsIds: [1,2,3].map((i) => `group-${i}`),
       lastActive: 'Был активен 30 минут назад',
       position: [55.7522 + i/50, 37.6156 - (i % 2)/10],
       metrics: [{
@@ -92,12 +95,20 @@ const STATE = {
 export default function ObjectPage() {
   const [state, setState] = useState<any>(STATE);
   const [map, setMap] = useState<any>(null)
-
+  const navigate = useNavigate();
+  const objectId = useParams();
 
   const setCurrent = (id: any) => {
+
     setState((prevState: any) => {
       const currentObjectId = prevState.data.currentObjectId;
       const nextCurrentObject = prevState.collections.objects[id];
+
+      if (id === currentObjectId) {
+        navigate(`/object`);
+      } else {
+        navigate(`/object/${id}`);
+      }
 
       return {
         ...prevState,
@@ -109,13 +120,25 @@ export default function ObjectPage() {
     });
   }
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    // console.log('useEffect', objectId);
+
+    // if (objectId && state.data.currentObjectId !== objectId) {
+    //   setCurrent(objectId);
+    // }
+  });
+
 
   return(
     <div className="page-layout">
       <SideBar navigate={navigate} />
 
       <ObjectList state={state} setCurrent={setCurrent} />
+      
+      <Routes>
+        <Route path='/:objectId' element={<ObjectCard state={state} />}/>
+      </Routes>
+
       
     </div>
   );

@@ -103,10 +103,10 @@ export default function MapPage() {
 
       if (id !== currentObjectId && id != null && nextCurrentObject) {
         map.setView(nextCurrentObject.position, 14);
-        setTimeout(() => {map.invalidateSize(); }, 0);
+        setTimeout(() => {map.invalidateSize(); }, 300);
       } else {
         map.setView([55.7522, 37.6156], 10);
-        setTimeout(() => {map.invalidateSize(); }, 0);
+        setTimeout(() => {map.invalidateSize(); }, 300);
       }
 
       return {

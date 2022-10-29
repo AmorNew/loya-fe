@@ -17,10 +17,15 @@
 
     border-right: 1px solid #E1E4EB;
     flex-shrink: 0;
+    margin-right: 0;
+    transition: margin .3s;
 }
 
 .root.hidden {
-    width: 0;
+    /* width: 0;
+    border-right: none; */
+
+    margin-right: -322px;
 }
 
 .metric {

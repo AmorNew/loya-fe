@@ -7,13 +7,13 @@ import Logo from "../../ui/Logo";
 
 import styles from './SideBar.module.css';
 import Icon from "../../ui/Icon";
-import { useLocation, useNavigate } from "react-router-dom";
-
+import { useLocation, useNavigate, useRoutes, useResolvedPath } from "react-router-dom";
+ 
 
 const SideBar = ({className, navigate}: any) => {
     const location = useLocation();
 
-    const currentLocation = location.pathname.replace('/', '');
+    const currentLocation = location.pathname.split('/')[1];
 
     const onLogoutClick = () => {
         console.log('exit'); 

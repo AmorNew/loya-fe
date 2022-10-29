@@ -1,0 +1,117 @@
+.root {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-content: flex-start;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    width: 100%;
+}
+
+.icon {
+    /* Auto layout */
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    width: 112px;
+    height: 112px;
+
+    /* Color BG/Black */
+
+    background: #F1F5F9;
+    border-radius: 9.33333px;
+
+    flex-shrink: 0;
+    margin-right: 24px;
+}
+
+.summary {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.title {
+    height: 32px;
+
+    /* Title 2 */
+
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 32px;
+    /* identical to box height, or 114% */
+
+    font-feature-settings: 'cv04' on, 'ss03' on, 'ss09' on;
+
+    /* System Text / Black */
+
+    color: #1B1F26;
+}
+
+.additionalInfo {
+    display: flex;
+    flex-direction: row;    
+    align-items: center;
+    justify-content: flex-start;
+    align-content: flex-start;
+    flex-wrap: nowrap;
+
+    height: 28px;
+    margin-top: 8px;
+    gap: 11px;
+}
+
+.mark {
+    height: 28px;
+
+    /* Subtitle 1 */
+
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 28px;
+    /* identical to box height, or 117% */
+
+    display: flex;
+    align-items: center;
+    font-feature-settings: 'ss03' on, 'ss09' on, 'cv04' on;
+
+    color: #929BAD;
+}
+
+.groups {
+    /* Auto layout */
+
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 8px;
+
+    height: 32px;
+    margin-top: 12px;
+}
+
+.group {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 6px 12px;
+    min-width: 95px;
+    height: 32px;
+    background: #F1F5F9;
+    border-radius: 4px;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+
+}

@@ -46,7 +46,7 @@ function App() {
         <Route path='/' element={<PrivateRoute hasSession={hasSession} />}>
             <Route path='/' element={<MapPage/>}/>
             <Route path='/map' element={<MapPage/>}/>
-            <Route path='/object' element={<ObjectPage/>}/>
+            <Route path='/object/*' element={<ObjectPage/>}/>
         </Route>
 
         <Route path="/login" element={<LoginPage setHasSession={setHasSession} />} />

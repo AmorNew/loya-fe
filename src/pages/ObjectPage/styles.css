@@ -8,6 +8,7 @@
     width: 100vw;
     position: fixed;
     /* overflow: hidden; */
+    background-color: #F8F9FA;
 }
 
 .exit-button {
