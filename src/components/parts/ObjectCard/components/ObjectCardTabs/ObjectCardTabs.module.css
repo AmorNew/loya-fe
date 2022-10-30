@@ -1,3 +1,61 @@
 .root {
-    font-weight: bold;
+    /* Auto layout */
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;    
+    align-content: center;
+    justify-content: flex-start;
+
+    padding: 0px;
+
+    width: 100%;
+    height: 42px;
+
+    gap: 16px;
+
+    border-bottom: 2px solid #E1E4EB;
+}
+
+.tab {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: row;
+
+    height: 42px;
+
+    /* Body 1 */
+
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    /* identical to box height, or 133% */
+
+    text-align: center;
+    font-feature-settings: 'cv04' on, 'ss03' on, 'ss09' on;
+
+    /* System Text/Light Gray */
+
+    color: #929BAD;
+
+    cursor: pointer;
+    
+    border-bottom: 2px solid #E1E4EB;
+
+
+}
+
+.tab.current {
+    /* System Text/Black */
+
+    color: #1B1F26;
+
+    border-bottom: 2px solid #155E75;
 }

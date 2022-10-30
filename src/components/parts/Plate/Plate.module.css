@@ -1,0 +1,48 @@
+.root {
+    box-sizing: border-box;
+
+    /* Auto layout */
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    gap: 2px;
+
+    height: 24px;
+    line-height: 14px;
+
+    /* System BG/White */
+
+    background: #FFFFFF;
+    /* System Graph/Line Gray */
+
+    border: 1px solid #E1E4EB;
+    border-radius: 4px;
+
+    /* Body 2 */
+
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    /* identical to box height, or 143% */
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-feature-settings: 'cv04' on, 'ss03' on, 'ss09' on;
+
+    /* System Text/Black */
+
+    color: #1B1F26;
+
+    text-transform: lowercase;
+}
+
+.region {
+    margin-left: 6px;
+    border-left: 1px solid #E1E4EB;
+    padding-left: 6px;
+}

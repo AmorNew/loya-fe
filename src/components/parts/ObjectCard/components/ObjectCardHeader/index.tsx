@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import cn from 'classnames';
 
 import styles from './ObjectCardHeader.module.css';
+import Plate from "../../../Plate";
 
 
 const ObjectCardHeader = ({state, objectId}: any) => {
@@ -14,10 +15,10 @@ const ObjectCardHeader = ({state, objectId}: any) => {
                 <div className={styles.title}>{model}</div>
                 <div className={styles.additionalInfo}>
                     <span className={styles.mark}>{mark}</span>
-                    <span className={styles.plate}>{plate}</span>
+                    <Plate stringPlate={plate}/>
                 </div>
                 <div className={styles.groups}>
-                    {groupsIds.map(() => <div className={styles.group}>group</div>)}
+                    {groupsIds.map((_: any, i:any): any => <div key={i} className={styles.group}>group</div>)}
                 </div>
             </div>
             <div className={styles.controls}>

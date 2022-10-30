@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import cn from 'classnames';
 
 import ory from "../../../pkg/sdk"
@@ -10,11 +10,13 @@ import Icon from "../../ui/Icon";
 import { useLocation, useNavigate, useRoutes, useResolvedPath } from "react-router-dom";
  
 
-const SideBar = ({className, navigate}: any) => {
+const SideBar = ({className}: any) => {
     const location = useLocation();
+    const navigate = useNavigate();
 
     const currentLocation = location.pathname.split('/')[1];
-
+    const currentObjectId = location.pathname.split('/')[2];
+    
     const onLogoutClick = () => {
         console.log('exit'); 
         
@@ -34,10 +36,18 @@ const SideBar = ({className, navigate}: any) => {
         <div className={styles.root}>
             <Logo />
             <div className={styles.iconsWrapper}>
-                <div className={cn(styles.button, {[styles.current]: currentLocation === '' || currentLocation === 'map'})} onClick={() => {navigate('/map');}} >
+                <div className={cn(styles.button, {[styles.current]: currentLocation === '' || currentLocation === 'map'})} onClick={() => {
+                    
+                    if (currentLocation === 'map' && currentObjectId) {
+                        navigate('/map/');
+                    } else {
+                        navigate(`/map/${currentObjectId}`);
+                    }
+                    
+                    }} >
                     <Icon type={'maps'} />
                 </div>
-                <div className={cn(styles.button, {[styles.current]: currentLocation === 'object'})} onClick={() => {navigate('/object');}} >
+                <div className={cn(styles.button, {[styles.current]: currentLocation === 'object'})} onClick={() => {navigate(`/object/${currentObjectId}`);}} >
                     <Icon type={'car'} />
                 </div>
 

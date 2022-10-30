@@ -9,22 +9,30 @@ import ObjectCardInformation from "./components/ObjectCardInformation";
 import ObjectCardHistory from "./components/ObjectCardHistory";
 
 
+const TABS = [
+    {name: 'Свойства', id: 'properties', TabComponent: ObjectCardInformation},
+    {name: 'История', id: 'history', TabComponent: ObjectCardHistory},
+];
+
 const ObjectCard = ({state}: any) => {
+    const [tabs] = useState(TABS);
+    const [currentTabId, setCurrentTabId] = useState(TABS[0].id);
+
     const {objectId} = useParams();
 
     if (!objectId) {
         return null;
     }
 
+    const {TabComponent} = tabs.find(({id}) => id === currentTabId) || {};
+
     return (
         <div className={cn(styles.root)}>
             <ObjectCardHeader objectId={objectId} state={state} />
 
-            <ObjectCardTabs />
+            <ObjectCardTabs tabs={tabs} currentTabId={currentTabId} setCurrentTab={setCurrentTabId} />
 
-            <ObjectCardInformation />
-
-            <ObjectCardHistory />
+            {TabComponent && <TabComponent />}
         </div>
     );
 }
