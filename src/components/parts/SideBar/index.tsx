@@ -41,7 +41,7 @@ const SideBar = ({className}: any) => {
                     if (currentLocation === 'map' && currentObjectId) {
                         navigate('/map/');
                     } else {
-                        navigate(`/map/${currentObjectId}`);
+                        navigate(`/map/${currentObjectId || ''}`);
                     }
                     
                 }} >
@@ -52,7 +52,7 @@ const SideBar = ({className}: any) => {
                     if (currentLocation === 'object' && currentObjectId) {
                         navigate('/object/');
                     } else {
-                        navigate(`/object/${currentObjectId}`);
+                        navigate(`/object/${currentObjectId || ''}`);
                     }
                     
                 }} >
