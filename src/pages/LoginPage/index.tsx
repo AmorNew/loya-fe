@@ -94,7 +94,7 @@ export default function LoginPage({setHasSession}: {setHasSession: (arg0: boolea
       .submitSelfServiceLoginFlow(String(flow?.id), {...values, method: 'password'})
       .then(() => {
         setHasSession(true);
-        navigate("/")
+        navigate("/map")
       })
       .catch((err) => {
         console.error('error', err);

@@ -6,8 +6,6 @@ import parsePlate from "../../../utils/parsePlate";
 
  
 const Plate = ({stringPlate}: {stringPlate: string}) => {
-    console.log(stringPlate);
-
     const {
         fullPlate, 
         firstPart, 

@@ -13,8 +13,6 @@ const ObjectList = ({className, state, setCurrent}: any) => {
 
     useEffect(() => {
         const objectId = location.pathname.split('/')[2];
-        
-        console.log('location.pathname', location.pathname);
 
         if (state.data.currentObjectId !== objectId) {
             setCurrent(objectId);

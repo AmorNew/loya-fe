@@ -18,9 +18,11 @@ const ObjectCard = ({state}: any) => {
     const [tabs] = useState(TABS);
     const [currentTabId, setCurrentTabId] = useState(TABS[0].id);
 
-    const {objectId} = useParams();
+    const {objectId=''} = useParams();
 
-    if (!objectId) {
+    const currentObject = state.collections.objects[objectId]
+
+    if (!objectId || !currentObject) {
         return null;
     }
 

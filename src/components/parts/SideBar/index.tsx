@@ -44,10 +44,18 @@ const SideBar = ({className}: any) => {
                         navigate(`/map/${currentObjectId}`);
                     }
                     
-                    }} >
+                }} >
                     <Icon type={'maps'} />
                 </div>
-                <div className={cn(styles.button, {[styles.current]: currentLocation === 'object'})} onClick={() => {navigate(`/object/${currentObjectId}`);}} >
+                <div className={cn(styles.button, {[styles.current]: currentLocation === 'object'})} onClick={() => {
+                
+                    if (currentLocation === 'object' && currentObjectId) {
+                        navigate('/object/');
+                    } else {
+                        navigate(`/object/${currentObjectId}`);
+                    }
+                    
+                }} >
                     <Icon type={'car'} />
                 </div>
 

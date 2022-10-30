@@ -110,11 +110,6 @@ function App() {
     axios.post(`${process.env.REACT_APP_API_URL}/status`, {}, {withCredentials: true});
   }, []);
 
-  if (hasSession === undefined) {
-    return <>loading...</>
-  }
-
-  
   const setCurrent = (id: any, cb: ({id, prevState}: any) => void) => {
     setState((prevState: any) => {
       const currentObjectId = prevState.data.currentObjectId;
@@ -141,18 +136,22 @@ function App() {
     });
   }
 
+  if (hasSession === undefined) {
+    return <>loading...</>
+  }
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<PrivateRoute hasSession={hasSession} />}>
-            <Route path='/' element={<MapPage state={state} setCurrent={setCurrent} />}/>
-            <Route path='/map/*' element={<MapPage state={state} setCurrent={setCurrent} />}/>
-            <Route path='/object/*' element={<ObjectPage state={state} setCurrent={setCurrent} />}/>
+          <Route path="/" element={<Navigate to="/map" />} />
+          <Route path='/map/*' element={<MapPage state={state} setCurrent={setCurrent} />}/>
+          <Route path='/object/*' element={<ObjectPage state={state} setCurrent={setCurrent} />}/>
         </Route>
 
         <Route path="/login" element={<LoginPage setHasSession={setHasSession} />} />
 
-        <Route path="*" element={<Navigate to="/" />} /> 
+        <Route path="*" element={<Navigate to="/map" />} /> 
       </Routes>
     </BrowserRouter>
   );
