@@ -1,0 +1,15 @@
+version: '3.5'
+
+services:
+  web_frontend_loya:
+    container_name: web_frontend_loya
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./dist/:/app
+      - ./pm2.config.js:/app/pm2.config.js
+    ports:
+      - "3000:3000"
+    command: "pm2-runtime pm2.config.js --watch"
+    restart: always

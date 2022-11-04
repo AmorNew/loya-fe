@@ -6,7 +6,7 @@ type Plate = {
     region: string,
 }
 
-const plateRegExp = /^([АВЕКМНОРСТУХABCKMHOPCTYX])(\d{3}(?<!000))([АВЕКМНОРСТУХABCKMHOPCTYX]{2})(\d{2,3})$/ui;
+const plateRegExp = /^([АВЕКМНОРСТУХABCKMHOPCTYX])(\d{3})([АВЕКМНОРСТУХABCKMHOPCTYX]{2})(\d{2,3})$/ui;
 
 const parsePlate = (stringPlate: string): Plate => {
     const [

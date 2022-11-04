@@ -30,7 +30,7 @@ const SideBar = ({className}: any) => {
             .then(() => {
                 navigate('/login');
             });
-    }
+    } 
 
     return (
         <div className={styles.root}>
@@ -39,7 +39,7 @@ const SideBar = ({className}: any) => {
                 <div className={cn(styles.button, {[styles.current]: currentLocation === '' || currentLocation === 'map'})} onClick={() => {
                     
                     if (currentLocation === 'map' && currentObjectId) {
-                        navigate('/map/');
+                        navigate('/map');
                     } else {
                         navigate(`/map/${currentObjectId || ''}`);
                     }
@@ -50,7 +50,7 @@ const SideBar = ({className}: any) => {
                 <div className={cn(styles.button, {[styles.current]: currentLocation === 'object'})} onClick={() => {
                 
                     if (currentLocation === 'object' && currentObjectId) {
-                        navigate('/object/');
+                        navigate('/object');
                     } else {
                         navigate(`/object/${currentObjectId || ''}`);
                     }

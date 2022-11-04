@@ -1,3 +1,37 @@
 .root {
-    font-weight: bold;
+    display: grid;
+    align-items: center;
+    justify-items: start;
+    justify-content: start;
+    align-content: center;
+    grid-template-columns: auto auto;
+    grid-gap: 20px 24px;
+}
+
+.name {
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+
+
+    /* System Text / Light Gray */
+
+    color: #929BAD;
+}
+
+.value {    
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    /* identical to box height, or 125% */
+    
+    
+    /* Dark/Normal */
+    
+    color: #283844;
 }

@@ -34,7 +34,7 @@ const ObjectCard = ({state}: any) => {
 
             <ObjectCardTabs tabs={tabs} currentTabId={currentTabId} setCurrentTab={setCurrentTabId} />
 
-            {TabComponent && <TabComponent />}
+            {TabComponent && <TabComponent state={state} />}
         </div>
     );
 }

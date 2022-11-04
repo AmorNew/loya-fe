@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package unitcoords;
+
+service UnitCoords {
+  rpc Coords(Unit) returns (stream Point) {}
+}
+
+message Point {
+  int64 object_id = 1;
+  float latitude = 2;
+  float longitude = 3;
+}
+
+message Unit {
+  int64 object_id = 1;
+}
