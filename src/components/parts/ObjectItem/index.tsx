@@ -1,14 +1,24 @@
 import React, {useState} from "react";
 import cn from 'classnames';
 
-
-
 import styles from './ObjectListItem.module.css';
+import { useAppSelector } from "../../../app/hooks";
+import { selectObjectById } from "../../../app/reducers/collectionsReducer";
+import { selectCurrentObjectId } from "../../../app/reducers/dataReducer";
 
 
-const ObjectItem = ({model, mark, lastActive, groups, onClick, isCurrent}: any) => {
+const ObjectItem = ({objectId, onClick, isCurrent}: any) => {
+    const currentObjectId = useAppSelector(selectCurrentObjectId);
+    const object = useAppSelector((state) => selectObjectById(state, objectId));
+    
+    if (!object) {
+        return null;
+    }
+
+    const {model, mark, lastActive} = object;
+
     return (
-        <div className={cn(styles.root, {[styles.isCurrent]: isCurrent})} onClick={onClick}>
+        <div className={cn(styles.root, {[styles.isCurrent]: currentObjectId === objectId})} onClick={onClick}>
             <div className={styles.icon}>
                 <div className={styles.status} />
             </div>

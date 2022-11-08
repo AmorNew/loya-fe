@@ -10,12 +10,13 @@ import Icon from "../../ui/Icon";
 import { useLocation, useNavigate, useRoutes, useResolvedPath } from "react-router-dom";
  
 
-const SideBar = ({className}: any) => {
+const SideBar = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
     const currentLocation = location.pathname.split('/')[1];
     const currentObjectId = location.pathname.split('/')[2];
+    
     
     const onLogoutClick = () => {
         console.log('exit'); 

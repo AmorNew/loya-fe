@@ -5,37 +5,38 @@ import { useLocation, useNavigate, useRoutes, useResolvedPath } from "react-rout
 import styles from './ObjectList.module.css';
 import ObjectListFilters from "./components/ObjectListFilters";
 import ObjectItem from "../ObjectItem";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { selectCurrentObjectsIds, selectCurrentObjectId, setCurrentObjectId } from "../../../app/reducers/dataReducer";
 
 
-const ObjectList = ({className, state, setCurrent}: any) => {
+const ObjectList = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const dispatch = useAppDispatch();
+
+    const currentObjectsIds = useAppSelector(selectCurrentObjectsIds);
+    // const currentObjectId = useAppSelector(selectCurrentObjectId);
 
     useEffect(() => {
         const objectId = location.pathname.split('/')[2];
+        
+        dispatch(setCurrentObjectId(Number(objectId)));
 
-        if (state.data.currentObjectId !== objectId) {
-            setCurrent(objectId);
-        }
-
-    }, [location.pathname, setCurrent, state.data.currentObjectId]);
+    }, [location.pathname, dispatch]);
 
     return (
         <div className={styles.root}>
             <ObjectListFilters />
 
             <div className={styles.listWrapper}>
-                {state.data.currObjectsIds
-                    .map((objectId: any, idx: any) => {
-                        const object = state.collections.objects[objectId];
-                        const isCurrent = state.data.currentObjectId === objectId;
-
+                {currentObjectsIds 
+                && currentObjectsIds.map((objectId: any, idx: any) => {
                         return (
                             <ObjectItem 
-                                key={object.id}
-                                isCurrent={isCurrent} 
-                                onClick={() => {if (isCurrent) {navigate(`./`)} else {navigate(`./${objectId}`)}}} 
-                                {...object} 
+                                key={objectId}
+                                objectId={objectId}
+                                // isCurrent={currentObjectId === objectId} 
+                                // onClick={() => {currentObjectId === objectId ? navigate(`.`) : navigate(`./${objectId}`)}}
                             />
                         )
                     })

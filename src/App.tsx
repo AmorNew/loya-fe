@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { useNavigate  } from "react-router-dom";
+import * as grpcWeb from 'grpc-web';
 import axios from 'axios';
 
 import ory from "./pkg/sdk"
@@ -11,23 +12,32 @@ import ObjectPage from './pages/ObjectPage';
 
 import PrivateRoute from './components/routing/PrivateRoute';
 
+import {UnitCoordsClient} from './schema/Unit_coordsServiceClientPb';
+import {Unit, Point} from './schema/unit_coords_pb';
+
 import './App.css';
+import { useAppDispatch } from './app/hooks';
+import { setCurrentObjectId, setCurrentObjectsIds } from './app/reducers/dataReducer';
+import { setUnits } from './app/reducers/collectionsReducer';
 
 
 const currObjectsIds: any = [];
+const objectsArr: any = [];
 
 const objects = () => {
   const res: any = {};
 
   const arr = [1,2,3,4,5,6,7,8,9,10];
+  // const arr = [1, 2];
 
   arr.forEach((i) => {
-    const id = `object-${i}`;
+    const id = i;
 
     currObjectsIds.push(id);
 
     res[id] = {
       id,
+      i,
       icon: '',
       online: false,
       mark: 'Caterpillar',
@@ -35,7 +45,10 @@ const objects = () => {
       plate: `A${770 + i}AA99`,
       groupsIds: [1,2,3].map((i) => `group-${i}`),
       lastActive: 'Был активен 30 минут назад',
-      position: [55.7522 + i/50, 37.6156 - (i % 2)/10],
+      position: {
+        lat: 55.7522 + i/50,
+        lng: 37.6156 - (i % 2)/10,
+      },
       metrics: [{
             name: 'Пробег',
             value: `${i}0 000 км`
@@ -65,6 +78,8 @@ const objects = () => {
         {name: 'Установленное оборудование', value: 'ГдеМои M5'},
       ],
     }
+
+    objectsArr.push(res[id]);
   });
 
   return res;
@@ -100,48 +115,69 @@ const STATE = {
   },
 };
 
+let res: grpcWeb.ClientReadableStream<Point>[];
+
 function App() {
   const [state, setState] = useState<any>(STATE);
   const [hasSession, setHasSession] = useState<boolean | undefined>(undefined)
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     ory
       .toSession()
       .then(({ data }) => {
-        // setSession(JSON.stringify(data, null, 2))
-        setHasSession(true)
+        console.log('data', data);
+        setHasSession(true);
+        
+        dispatch(setCurrentObjectsIds([...STATE.data.currObjectsIds]));
+
+        dispatch(setUnits([...objectsArr]));
+
+        const headers = {'x-user-id': data.identity.id};
+
+        axios.post(`${process.env.REACT_APP_API_URL}/status`, {}, {withCredentials: true, headers});
+
+        axios.post(`${process.env.REACT_APP_API_URL}/filterUnits`, {
+          "filter": {},
+          "limit": 100,
+          "offset": 0,
+          "order_by": "created_at",
+          "order_direction": "asc"
+        }, {withCredentials: true, headers});
       })
       .catch(() => {
         setHasSession(false)
       });
 
-    axios.post(`${process.env.REACT_APP_API_URL}/status`, {}, {withCredentials: true});
+
   }, []);
 
   const setCurrent = (id: any, cb: ({id, prevState}: any) => void) => {
-    setState((prevState: any) => {
-      const currentObjectId = prevState.data.currentObjectId;
+    console.log('setCurrent');
+    // setState((prevState: any) => {
+    //   const currentObjectId = prevState.data.currentObjectId;
 
-      // const nextCurrentObject = prevState.collections.objects[id];
+    //   // const nextCurrentObject = prevState.collections.objects[id];
 
-      // if (id === currentObjectId) {
-      //   navigate(`/object`);
-      // } else {
-      //   navigate(`/object/${id}`);
-      // }
+    //   // if (id === currentObjectId) {
+    //   //   navigate(`/object`);
+    //   // } else {
+    //   //   navigate(`/object/${id}`);
+    //   // }
 
-      if (typeof cb === 'function') {
-        cb({id, prevState});
-      }
+    //   if (typeof cb === 'function') {
+    //     cb({id, prevState});
+    //   }
 
-      return {
-        ...prevState,
-        data: {
-          ...prevState.data,
-          currentObjectId: id === currentObjectId ? null : id, 
-        }
-      }
-    });
+    //   return {
+    //     ...prevState,
+    //     data: {
+    //       ...prevState.data,
+    //       currentObjectId: id === currentObjectId ? null : id, 
+    //     }
+    //   }
+    // });
   }
 
   if (hasSession === undefined) {
@@ -153,7 +189,7 @@ function App() {
       <Routes>
         <Route path='/' element={<PrivateRoute hasSession={hasSession} />}>
           <Route path="/" element={<Navigate to="/map" />} />
-          <Route path='/map/*' element={<MapPage state={state} setCurrent={setCurrent} />}/>
+          <Route path='/map/*' element={<MapPage />}/>
           <Route path='/object/*' element={<ObjectPage state={state} setCurrent={setCurrent} />}/>
         </Route>
 
