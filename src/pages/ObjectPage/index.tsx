@@ -4,22 +4,25 @@ import { Routes, Route } from 'react-router-dom';
 import SideBar from '../../components/parts/SideBar';
 import ObjectList from '../../components/parts/ObjectList';
 import ObjectCard from '../../components/parts/ObjectCard';
+import ObjectForm from '../../components/parts/ObjectForm';
 
-import './styles.css';
+import styles from'./ObjectPage.module.scss';
 
 
-export default function ObjectPage({state}: any) {
+export default function ObjectPage() {
   return(
-    <div className="page-layout">
+    <div className={styles.layout}>
       <SideBar />
 
       <ObjectList />
-      
-      <Routes>
-        <Route path='/:objectId' element={<ObjectCard state={state} />}/>
-      </Routes>
 
-      
+      <div className={styles.cardWrapper}>
+        <Routes>
+          <Route path='/:objectId' element={<ObjectCard />}/>
+          <Route path='/:objectId/edit' element={<ObjectForm mode='edit' />}/>
+          <Route path='/new' element={<ObjectForm />}/>
+        </Routes>  
+      </div>
     </div>
   );
 }

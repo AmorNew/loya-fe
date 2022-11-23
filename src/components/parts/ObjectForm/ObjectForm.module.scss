@@ -1,0 +1,55 @@
+.title {
+    /* Title 2 */
+
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 32px;
+    /* identical to box height, or 114% */
+
+    font-feature-settings: 'cv04' on, 'ss03' on, 'ss09' on;
+
+    /* Black */
+
+    color: #212429;
+
+    margin: 0;
+}
+
+.form {
+    width: 100%;
+
+    &.locked {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    align-content: stretch;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    width: 100%;
+}
+
+.buttonRow {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: row;
+    width: 100%;
+    gap: 8px;
+    align-content: center;
+}
+
+.name {
+    flex-basis: 221px;
+}
+
+.input {
+    flex-grow: 1;
+}

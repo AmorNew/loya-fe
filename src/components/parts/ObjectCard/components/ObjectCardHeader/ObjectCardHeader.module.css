@@ -114,3 +114,8 @@
     align-content: center;
     justify-content: center;
 }
+
+.controls {
+    display: flex;
+    gap: 8px;
+}

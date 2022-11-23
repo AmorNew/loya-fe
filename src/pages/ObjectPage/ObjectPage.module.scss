@@ -1,4 +1,4 @@
-.page-layout {
+.layout {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -11,20 +11,9 @@
     background-color: #F8F9FA;
 }
 
-.exit-button {
-    margin-left: 20px;
-    width: 130px;
-}
-
-.map {
-    display: block;
-    width: 100%;
-    flex-grow: 1;
-}
-
-.leaflet-control-attribution.leaflet-control {
-    display: none;
-    opacity: 0;
-    width: 0;
-    height: 0;
+.cardWrapper {
+    padding: 40px 56px;
+    min-width: 950px;
+    height: 100%;
+    box-sizing: border-box;
 }

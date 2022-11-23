@@ -1,0 +1,27 @@
+.root {
+    display: inline-flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+
+    overflow: hidden;
+
+    width: 24px;
+    height: 24px;
+
+    &.root.clickable {
+        cursor: pointer;
+    }
+
+    &.white * {
+        fill: #FFFFFF ;
+    }
+
+    &.grey * {
+        fill: #929BAD ;
+    }
+
+    &.yellow * {
+        fill: #F5C545 ;
+    }
+}

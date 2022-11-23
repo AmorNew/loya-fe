@@ -1,12 +1,29 @@
-import React, {useState} from "react";
+import React from "react";
 import cn from 'classnames';
 
+import LicensePlate from "../../../LicensePlate";
+import { useAppSelector } from "../../../../../app/hooks";
+import { selectCurrentObjectId } from "../../../../../app/reducers/dataReducer";
+import { selectObjectById } from "../../../../../app/reducers/collectionsReducer";
+
 import styles from './ObjectCardHeader.module.css';
-import Plate from "../../../Plate";
+import { selectUnitById, useDeleteUnitMutation } from "../../../../../app/api/loyaBackendAPI";
+import Icon from "../../../../ui/Icon";
+import { useNavigate } from "react-router-dom";
 
 
-const ObjectCardHeader = ({state, objectId}: any) => {
-    const {model, mark, plate, groupsIds} = state.collections.objects[objectId];
+const ObjectCardHeader = () => {
+    const [deleteTrigger] = useDeleteUnitMutation();
+    const navigate = useNavigate();
+    
+    const currentObjectId = useAppSelector(selectCurrentObjectId);
+    const currentObject = useAppSelector(state => selectUnitById(state, currentObjectId));
+
+    if (!currentObject) {
+        return null;
+    }
+
+    const { vehicle: {model, make, license_plate}, groupsIds = []} = currentObject;
 
     return (
         <div className={cn(styles.root)}>
@@ -14,17 +31,17 @@ const ObjectCardHeader = ({state, objectId}: any) => {
             <div className={styles.summary}>
                 <div className={styles.title}>{model}</div>
                 <div className={styles.additionalInfo}>
-                    <span className={styles.mark}>{mark}</span>
-                    <Plate stringPlate={plate}/>
+                    <span className={styles.mark}>{make}</span>
+                    <LicensePlate stringPlate={license_plate}/>
                 </div>
                 <div className={styles.groups}>
                     {groupsIds.map((_: any, i:any): any => <div key={i} className={styles.group}>group</div>)}
                 </div>
             </div>
             <div className={styles.controls}>
-                <div className={styles.controlsIcon}></div>
-                <div className={styles.controlsIcon}></div>
-                <div className={styles.controlsIcon}></div>
+                <Icon type="location" color="grey" onClick={() => navigate(`/map/${currentObjectId}`)}/>
+                <Icon type="edit" color="grey" onClick={() => navigate(`/object/${currentObjectId}/edit`)}/>
+                <Icon type="delete" color="grey" onClick={() => deleteTrigger({id: Number(currentObjectId)})}/>
             </div>
         </div>
     );

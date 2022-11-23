@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from "react";
-import cn from 'classnames';
+import React from "react";
 
-import styles from './Plate.module.css';
 import parsePlate from "../../../utils/parsePlate";
 
+import styles from './LicensePlate.module.css';
  
+
 const Plate = ({stringPlate}: {stringPlate: string}) => {
     const {
         fullPlate, 

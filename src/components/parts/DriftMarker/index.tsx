@@ -1,26 +1,32 @@
 import React from 'react';
 import ReactLeafletDriftMarker from "react-leaflet-drift-marker"
 
-import { selectObjectById, UnitId } from '../../../app/reducers/collectionsReducer';
+import { UnitId } from '../../../app/reducers/collectionsReducer';
 import { useAppSelector } from '../../../app/hooks';
 import { LatLngExpression } from 'leaflet';
+import { selectPointByObjectId } from '../../../app/reducers/pointsReducer';
 
 
 const DriftMarker = (
-    {objectId, onClick}: 
-    {objectId: UnitId, onClick: (objectId: UnitId, position: LatLngExpression) => void}
+    {objectId, hwId, onClick}: 
+    {objectId: UnitId, hwId: number, onClick: (objectId: UnitId, position: LatLngExpression) => void}
 ) => {
-    const object = useAppSelector(state => selectObjectById(state, objectId));
+    const point = useAppSelector(state => selectPointByObjectId(state, hwId));
 
-    if (!object) {
+    if (!point) {
         return null;
     }
 
-    const {position} = object;
+    const {latitude, longitude} = point;
+
+    const position: LatLngExpression = {
+        lat: latitude,
+        lng: longitude,
+    }
 
     return (
         <ReactLeafletDriftMarker 
-            position={object.position} 
+            position={position} 
             duration={1000}
             eventHandlers={{click: () => onClick(objectId, position)}}
         />

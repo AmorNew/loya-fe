@@ -1,46 +1,63 @@
-import React, {useState, useEffect} from "react";
-import cn from 'classnames';
-import { useLocation, useNavigate, useRoutes, useResolvedPath } from "react-router-dom";
+import React, {useEffect} from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import styles from './ObjectList.module.css';
 import ObjectListFilters from "./components/ObjectListFilters";
 import ObjectItem from "../ObjectItem";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { selectCurrentObjectsIds, selectCurrentObjectId, setCurrentObjectId } from "../../../app/reducers/dataReducer";
+import { useAppDispatch } from "../../../app/hooks";
+import { setCurrentObjectId } from "../../../app/reducers/dataReducer";
+import { useFilterUnitsQuery, useStatusQuery } from "../../../app/api/loyaBackendAPI";
+import Button from "../../ui/Button";
 
 
 const ObjectList = () => {
-    const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
-    const currentObjectsIds = useAppSelector(selectCurrentObjectsIds);
-    // const currentObjectId = useAppSelector(selectCurrentObjectId);
+    let units = [];
 
+    const {
+        data,
+        isLoading,
+        isSuccess,
+        isError,
+        error
+    } = useFilterUnitsQuery('');
+
+    const {data: status} = useStatusQuery('');
+
+      
     useEffect(() => {
         const objectId = location.pathname.split('/')[2];
         
         dispatch(setCurrentObjectId(Number(objectId)));
-
     }, [location.pathname, dispatch]);
+
+    if (isSuccess && data) {
+        units = data.result.units;
+    }
+
+    let content;
+
+    if (isLoading) {
+        content = <div>Loading...</div>;
+      } else if (isSuccess) {
+        content = units.map(({id}: any) => (<ObjectItem key={id} objectId={id} />));
+      } else if (isError) {
+        content = <div>{error.toString()}</div>;
+      }
 
     return (
         <div className={styles.root}>
             <ObjectListFilters />
 
             <div className={styles.listWrapper}>
-                {currentObjectsIds 
-                && currentObjectsIds.map((objectId: any, idx: any) => {
-                        return (
-                            <ObjectItem 
-                                key={objectId}
-                                objectId={objectId}
-                                // isCurrent={currentObjectId === objectId} 
-                                // onClick={() => {currentObjectId === objectId ? navigate(`.`) : navigate(`./${objectId}`)}}
-                            />
-                        )
-                    })
-                }
+                {content}           
+            </div>
+
+            <div className={styles.buttonWrapper}>
+                <Button onClick={() => navigate('/object/new')}>+ Добавить новый объект</Button>
             </div>
         </div>
     );

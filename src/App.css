@@ -66,3 +66,10 @@
 body {
   font-family: "IBM Plex Sans", "Arial", sans-serif;
 }
+
+.leaflet-control-attribution.leaflet-control {
+  display: none;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}

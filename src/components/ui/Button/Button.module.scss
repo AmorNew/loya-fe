@@ -1,4 +1,4 @@
-.button {
+.root {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -6,6 +6,11 @@
     padding: 12px 24px;
 
     width: 100%;
+
+    &.shrink {
+        width: auto;
+    }
+
     height: 48px;
 
     background: #155E75;
@@ -28,13 +33,32 @@
 
     transition: background .1s ease;
     margin: 16px 0;
-}
 
-.button:hover, .button:focus, .button:focus-visible, .button:focus-within {
-    background: #0E7490;
-}
+    &:hover, 
+    &:focus, 
+    &:focus-visible, 
+    &:focus-within {
+        background: #0E7490;
+    }
 
-.button:active {
-    background: #164E63;
-}
+    &:active {
+        background: #164E63;
+    }
 
+    &.secondary {
+        color: #1B1F26;
+        background: #F1F5F9;
+
+        &:hover, 
+        &:focus, 
+        &:focus-visible, 
+        &:focus-within {
+            background: #F8FAFC;
+        }
+
+        &:active {
+            background: #E2E8F0;
+        }
+    }
+
+}

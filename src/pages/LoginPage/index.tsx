@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate  } from "react-router-dom";
-
+import cn from 'classnames';
 
 import {
   SelfServiceLoginFlow,
-  SelfServiceRecoveryFlow,
-  SelfServiceRegistrationFlow,
-  SelfServiceSettingsFlow,
-  SelfServiceVerificationFlow,
   SubmitSelfServiceLoginFlowBody,
-  SubmitSelfServiceRecoveryFlowBody,
-  SubmitSelfServiceRegistrationFlowBody,
-  SubmitSelfServiceSettingsFlowBody,
-  SubmitSelfServiceVerificationFlowBody,
-  UiNode,
 } from "@ory/client"
 
 import { getNodeId } from "@ory/integrations/ui"
@@ -22,19 +13,24 @@ import { isUiNodeInputAttributes } from "@ory/integrations/ui"
 
 import ory from "../../pkg/sdk"
 
-
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import Logo from '../../components/ui/Logo';
 
-import './styles.css';
+import { useDispatch } from 'react-redux';
+import { setIdentity } from '../../app/reducers/userReducer';
+
+import styles from './LoginPage.module.scss';
 
 
-export default function LoginPage({setHasSession}: {setHasSession: (arg0: boolean) => void}) {
+export default function LoginPage() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [failed, setFailed] = useState<boolean>(false);
   const [flow, setFlow] = useState<SelfServiceLoginFlow>()
   const [values, setValues] = useState<any>({})
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!flow) {
@@ -76,15 +72,11 @@ export default function LoginPage({setHasSession}: {setHasSession: (arg0: boolea
     e.stopPropagation()
     e.preventDefault()
 
-    // Prevent double submission!
-    // if (this.state.isLoading) {
-    //   return Promise.resolve()
-    // }
+    if (isLoading) {
+      return Promise.resolve()
+    }
 
-    // this.setState((state) => ({
-    //   ...state,
-    //   isLoading: true,
-    // }))
+    setIsLoading(true);
 
     return onSubmit(values).finally(() => {})
   }
@@ -92,12 +84,17 @@ export default function LoginPage({setHasSession}: {setHasSession: (arg0: boolea
   const onSubmit = (values: SubmitSelfServiceLoginFlowBody) => {
     return ory
       .submitSelfServiceLoginFlow(String(flow?.id), {...values, method: 'password'})
-      .then(() => {
-        setHasSession(true);
+      .then(({data}) => {
+        console.log('login data', data);
+        
+        dispatch(setIdentity(data.session.identity));
+
         navigate("/map")
       })
       .catch((err) => {
         console.error('error', err);
+
+        setIsLoading(false);
       });
   }
  
@@ -107,13 +104,17 @@ export default function LoginPage({setHasSession}: {setHasSession: (arg0: boolea
   }
 
   return(
-    <div className="formWrapper">
-      <div className="formHead">
-        <div className="logo"><Logo className="login-logo-icon" />LOYA</div>
-        <div className="phone">+7 (495) 108-16-03</div>
+    <div className={styles.formWrapper}>
+      <div className={styles.formHead}>
+        <div className={styles.logo}>
+          <Logo className={styles['login-logo-icon']} />
+          LOYA
+        </div>
+
+        <div className={styles.phone}>+7 (495) 108-16-03</div>
       </div>
       <form 
-        className="form" 
+        className={cn(styles.form, {[styles.loading]: isLoading})}
         onSubmit={handleSubmit}
         action={flow.ui.action}
         method={flow.ui.method}  
@@ -124,7 +125,7 @@ export default function LoginPage({setHasSession}: {setHasSession: (arg0: boolea
           const id = getNodeId(node);
           
           if (isUiNodeInputAttributes(node.attributes) && node.attributes.type === 'submit') {
-            return <Button key={`${id}-${i}`}  type="submit">Войти</Button>
+            return <Button key={`${id}-${i}`} type="submit">Войти</Button>
           }
 
           return(
@@ -132,7 +133,7 @@ export default function LoginPage({setHasSession}: {setHasSession: (arg0: boolea
                 key={`${id}-${i}`} 
                 labelText={node.meta?.label?.text} 
                 {...node.attributes} 
-                value={values[id as any]}
+                value={values[id as any] || ''}
                 onChange={(value: any, e: any) => {
                   return setValues((prevState: any) => {
                     return ({...prevState, [e.target.name]: value});

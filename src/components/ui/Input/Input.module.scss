@@ -3,25 +3,38 @@
     box-sizing: border-box;
     position: relative;
     
-
     height: 48px;
     
     background: #FFFFFF;
     
     border: 1px solid #E1E4EB;
     border-radius: 4px;
-    padding: 7px 8px;
     margin: 8px 0;
+    
+    
+    cursor: text;
 
-    cursor: pointer;
+    padding: 7px 8px;
+
+    &.s{
+        height: 32px;
+        padding: 6px 8px;
+    }
+
+    &.focus {
+        border: 1px solid #155E75;
+    }
+
+    &.disabled {
+        background-color: #E1E4EB;
+        border: 1px solid #E1E4EB;
+        cursor: default;
+    }
 }
 
 .labelText {
 
-    height: 20px;
 
-    font-size: 14px;
-    line-height: 20px;
     /* identical to box height, or 143% */
 
     font-feature-settings: 'cv04' on, 'ss03' on, 'ss09' on;
@@ -31,12 +44,9 @@
     color: #929BAD;
 
     padding: 0;
-    margin: 7px 0;
     
     transition: all .1s ease;
-}
 
-.focus .labelText {
     /* Label */
 
     height: 14px;
@@ -45,13 +55,85 @@
 
     font-size: 11px;
     line-height: 14px;
-
     margin: 0;
+    user-select: none;
+
+    .l.empty & {
+        height: 20px;
+
+        font-size: 14px;
+        line-height: 20px;
+
+        margin: 7px 0;
+    }
+
+    .l.focus & {
+        /* Label */
+
+        height: 14px;
+
+        /* Caption 1 */
+
+        font-size: 11px;
+        line-height: 14px;
+
+        margin: 0;
+    }
+
+    .s & {
+        height: 20px;
+
+        font-size: 14px;
+        line-height: 20px;
+
+        margin: 0;
+
+        opacity: 0;
+
+        position: absolute;
+    }
+
+
+    .s.empty & {
+        position: inherit;
+        
+        opacity: 1;
+    }
+
+    .s.focus & {
+        position: absolute;
+    }
+}
+
+.focus .labelText {
+    &.l {
+        /* Label */
+
+        height: 14px;
+
+        /* Caption 1 */
+
+        font-size: 11px;
+        line-height: 14px;
+
+        margin: 0;
+    }
+
+    
 }
 
 .input {
     width: 100%;
-    height: 0;
+
+    height: 20px;
+
+    .empty & {
+        height: 0;
+    }
+
+    .focus & {
+        height: 20px;
+    }
 
     /* Body 2 */
 
@@ -80,6 +162,10 @@
 
     transition: all .1s .1s ease;
     background: transparent;
+
+    .disabled & {
+        color: #555E70;
+    }
 }
 
 .input:focus, .input:focus-visible, .input:focus-within {
@@ -89,10 +175,6 @@
 input:-webkit-autofill,
 input:-webkit-autofill:focus {
     transition: background-color 600000s 0s, color 600000s 0s;
-}
-
-.focus .input {
-    height: 20px;
 }
 
 .hidden {

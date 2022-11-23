@@ -1,13 +1,28 @@
 import React, {useState} from "react";
 import cn from 'classnames';
 
-import './styles.css';
+import styles from "./Button.module.scss"
 
-const Button = (props: any) => {
-    const {children, className, ...restProps} = props;
+type Props = {
+    children: React.ReactNode, 
+    className?: string,
+    buttonStyle?: 'primary' | 'secondary',
+    type?: 'button' | 'submit', 
+    onClick?: () => void,
+    shrink?: boolean,
+};
+
+const Button = (props: Props) => {
+    const {children, className, buttonStyle = 'primary', type = 'button', shrink, onClick} = props;
 
     return (
-        <button className={cn("button", className)} {...restProps}>
+        <button 
+            className={cn(styles.root, className, styles[buttonStyle], {
+                [styles.shrink]: shrink,
+            })} 
+            type={type}
+            onClick={onClick}
+        >
             {children}
         </button>
     );

@@ -1,5 +1,5 @@
 /**
- * @fileoverview gRPC-Web generated client stub for unitcoords
+ * @fileoverview gRPC-Web generated client stub for position
  * @enhanceable
  * @public
  */
@@ -8,7 +8,7 @@
 // versions:
 // 	protoc-gen-grpc-web v1.4.2
 // 	protoc              v3.19.6
-// source: unit_coords.proto
+// source: position.proto
 
 
 /* eslint-disable */
@@ -17,10 +17,10 @@
 
 import * as grpcWeb from 'grpc-web';
 
-import * as unit_coords_pb from './unit_coords_pb';
+import * as position_pb from './position_pb';
 
 
-export class UnitCoordsClient {
+export class PositionClient {
   client_: grpcWeb.AbstractClientBase;
   hostname_: string;
   credentials_: null | { [index: string]: string; };
@@ -39,26 +39,26 @@ export class UnitCoordsClient {
     this.options_ = options;
   }
 
-  methodDescriptorCoords = new grpcWeb.MethodDescriptor(
-    '/unitcoords.UnitCoords/Coords',
+  methodDescriptorStreaming = new grpcWeb.MethodDescriptor(
+    '/position.Position/Streaming',
     grpcWeb.MethodType.SERVER_STREAMING,
-    unit_coords_pb.Unit,
-    unit_coords_pb.Point,
-    (request: unit_coords_pb.Unit) => {
+    position_pb.Unit,
+    position_pb.Point,
+    (request: position_pb.Unit) => {
       return request.serializeBinary();
     },
-    unit_coords_pb.Point.deserializeBinary
+    position_pb.Point.deserializeBinary
   );
 
-  coords(
-    request: unit_coords_pb.Unit,
-    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<unit_coords_pb.Point> {
+  streaming(
+    request: position_pb.Unit,
+    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<position_pb.Point> {
     return this.client_.serverStreaming(
       this.hostname_ +
-        '/unitcoords.UnitCoords/Coords',
+        '/position.Position/Streaming',
       request,
       metadata || {},
-      this.methodDescriptorCoords);
+      this.methodDescriptorStreaming);
   }
 
 }

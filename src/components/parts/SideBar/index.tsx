@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 import cn from 'classnames';
 
 import ory from "../../../pkg/sdk"
@@ -7,7 +7,7 @@ import Logo from "../../ui/Logo";
 
 import styles from './SideBar.module.css';
 import Icon from "../../ui/Icon";
-import { useLocation, useNavigate, useRoutes, useResolvedPath } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
  
 
 const SideBar = () => {
@@ -16,7 +16,6 @@ const SideBar = () => {
 
     const currentLocation = location.pathname.split('/')[1];
     const currentObjectId = location.pathname.split('/')[2];
-    
     
     const onLogoutClick = () => {
         console.log('exit'); 
