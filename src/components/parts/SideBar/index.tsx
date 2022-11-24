@@ -56,7 +56,7 @@ const SideBar = () => {
                     }
                     
                 }} >
-                    <Icon type={'car'} />
+                    <Icon type={'truck'} />
                 </div>
 
                 <div className={cn(styles.filler)} />

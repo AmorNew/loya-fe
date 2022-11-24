@@ -8,6 +8,8 @@ import { selectCurrentObjectId } from "../../../app/reducers/dataReducer";
 
 import styles from './ObjectListItem.module.css';
 import { selectUnitById } from "../../../app/api/loyaBackendAPI";
+import Icon from "../../ui/Icon";
+import { iconTypes } from "../ObjectForm/components/IconSelector";
 
 
 const ObjectItem = ({objectId, markCurrent = true}: any) => {
@@ -29,13 +31,16 @@ const ObjectItem = ({objectId, markCurrent = true}: any) => {
         }
     };
  
-    const {visible_name, vehicle: {make, model}} = object;
+    const {visible_name, icon, vehicle: {make, model}} = object;
 
     const lastActive = 'Был активен 30 минут назад';
 
+    const iconProps = iconTypes[icon];
+
     return (
         <div className={cn(styles.root, {[styles.isCurrent]: isCurrent, [styles.clickable]: markCurrent})} onClick={onClick}>
-            <div className={styles.icon}>
+            <div className={styles.icon} style={{background: iconProps?.background}}>
+                {iconProps && <Icon type={iconProps.icon} color={iconProps.color} />}
                 <div className={styles.status} />
             </div>
             <div className={styles.wrapper}>
