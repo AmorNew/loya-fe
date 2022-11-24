@@ -1,0 +1,24 @@
+.root {
+    display: flex;
+    gap: 8px;
+    padding: 24px 0;
+}
+
+.icon {
+    display: flex;
+    border-radius: 50%;
+    height: 32px;
+    width: 32px;
+
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    
+    cursor: pointer;
+
+    &.current {
+        outline: 1px solid #155E75;
+    }
+}

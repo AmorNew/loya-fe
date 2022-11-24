@@ -10,6 +10,7 @@ import styles from './ObjectCardHeader.module.css';
 import { selectUnitById, useDeleteUnitMutation } from "../../../../../app/api/loyaBackendAPI";
 import Icon from "../../../../ui/Icon";
 import { useNavigate } from "react-router-dom";
+import { iconTypes } from "../../../ObjectForm/components/IconSelector";
 
 
 const ObjectCardHeader = () => {
@@ -23,11 +24,15 @@ const ObjectCardHeader = () => {
         return null;
     }
 
-    const { vehicle: {model, make, license_plate}, groupsIds = []} = currentObject;
+    const { vehicle: {model, make, license_plate}, groupsIds = [], icon} = currentObject;
+
+    const iconProps = iconTypes[icon];
 
     return (
         <div className={cn(styles.root)}>
-            <div className={styles.icon}></div>
+            <div className={styles.icon} style={{background: iconProps?.background}}>
+                {iconProps && <Icon type={iconProps.icon} color={iconProps.color} size='l' />}
+            </div>
             <div className={styles.summary}>
                 <div className={styles.title}>{model}</div>
                 <div className={styles.additionalInfo}>

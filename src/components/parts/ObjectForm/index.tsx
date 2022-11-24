@@ -11,6 +11,7 @@ import { useAppSelector } from "../../../app/hooks";
 import { selectCurrentObjectId } from "../../../app/reducers/dataReducer";
 
 import styles from './ObjectForm.module.scss';
+import IconSelector from "./components/IconSelector";
 
 
 type Props = {
@@ -30,6 +31,38 @@ const formSchema = [
     {rowName: 'Номер телефона 1', props: {labelText: 'Номер телефона 1', name: "sim1"}},
     {rowName: 'Номер телефона 2', props: {labelText: 'Номер телефона 2', name: "sim2"}},
 ];
+
+const iconTypes = {
+    blackTruck: {
+        color: '#1B1F26',
+        background: '#F1F5F9',
+        icon: 'truck',
+    },
+    
+    breezeRoadhelp: {
+        color: '#155E75',
+        background: '#EFF6FF',
+        icon: 'roadhelp',
+    },
+    
+    purpleCar: {
+        color: '#6366F1',
+        background: '#E0E7FF',
+        icon: 'car',
+    },
+    
+    cyanTruck: {
+        color: '#06B6D4',
+        background: '#ECFEFF',
+        icon: 'truck',
+    },
+    
+    greenRoadhelp: {
+        color: '#10B981',
+        background: '#F0FDFA',
+        icon: 'roadhelp',
+    },
+};
 
 const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
     const [values, setValues] = useState<any>(formSchema.reduce((acc, item) => {
@@ -178,28 +211,51 @@ const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
                 labelText, 
                 name,
                 disabled,
-            }}, index) => (
-                <div  key={`${name}-${index}`} className={styles.row}>
-                    <div className={styles.name}>
-                        {rowName}
+            }}, index) => {
+                
+                if (name === 'icon') {
+                    return (
+                        <div key={`${name}-${index}`} className={styles.row}>
+                            <div className={styles.name}>
+                                {rowName}
+                            </div>
+
+                            <IconSelector 
+                                value={values[name]}
+                                onIconClick={(value: string) => {
+                                    setValues((prevValues: any) => ({
+                                        ...prevValues,
+                                        [name]: value,
+                                    }))
+                                }} 
+                            />
+                        </div>
+                    );
+                }
+
+                return (
+                    <div  key={`${name}-${index}`} className={styles.row}>
+                        <div className={styles.name}>
+                            {rowName}
+                        </div>
+                        
+                        <Input 
+                            size="s"
+                            disabled={disabled}
+                            className={styles.input} 
+                            labelText={labelText} 
+                            name={name}
+                            value={values[name]}
+                            onChange={(value: any) => {
+                                setValues((prevValues: any) => ({
+                                    ...prevValues,
+                                    [name]: value,
+                                }))
+                            }}
+                        />
                     </div>
-                    
-                    <Input 
-                        size="s"
-                        disabled={disabled}
-                        className={styles.input} 
-                        labelText={labelText} 
-                        name={name}
-                        value={values[name]}
-                        onChange={(value: any) => {
-                            setValues((prevValues: any) => ({
-                                ...prevValues,
-                                [name]: value,
-                            }))
-                        }}
-                    />
-                </div>
-            ))}
+                );
+            })}
 
             <div className={styles.buttonRow}>
                 <Button type="button" buttonStyle="secondary" shrink={true} onClick={() => {console.log('ГАЛЯ! У НАС ОТМЕНА!'); navigate(-1);}}>
