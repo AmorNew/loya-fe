@@ -1,0 +1,74 @@
+.root {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+
+    width: 38px;
+    height: 38px;
+
+    margin-top: -35px;
+    margin-left: -13px;
+}
+
+.iconWrapper {
+    position: absolute;
+    top: 2px;
+
+    &.white > svg > path:not(:last-child) {
+        fill: #FFFFFF ;
+    }
+
+    &.grey > svg > path:not(:last-child) {
+        fill: #929BAD ;
+    }
+
+    &.yellow > svg > path:not(:last-child) {
+        fill: #F5C545 ;
+    }
+
+    &.black > svg > path:not(:last-child) {
+        fill: #1B1F26 ;
+    } 
+
+    &.breeze > svg > path:not(:last-child) {
+        fill: #155E75 ;
+    } 
+
+    &.purple > svg > path:not(:last-child) {
+        fill: #6366F1 ;
+    } 
+
+    &.cyan > svg > path:not(:last-child) {
+        fill: #06B6D4 ;
+    } 
+
+    &.green > svg > path:not(:last-child) {
+        fill: #10B981 ;
+    }
+}
+
+.name {
+    position: absolute;
+
+    top: -15px;
+
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 18px;
+    /* identical to box height, or 150% */
+
+    font-feature-settings: 'cv04' on, 'ss03' on, 'ss09' on;
+
+    /* System Text / Black */
+
+    color: #1B1F26;
+
+    white-space: nowrap;
+}

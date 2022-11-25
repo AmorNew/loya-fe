@@ -17,7 +17,7 @@ export const loyaBackendApi = createApi({
       const identity = (getState() as RootState).user.identity;
 
       if (identity !== undefined && identity !== false) {
-        headers.set('x-user-id', String(identity.id))
+        // headers.set('x-user-id', String(identity.id))
       }
     
       return headers

@@ -67,7 +67,7 @@ export default function Map() {
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             
             {currentObjects 
-            && currentObjects.map(({id, device: {hw_id}}: Unit) => {
+            && currentObjects.map(({id, icon, visible_name, device: {hw_id}}: Unit) => {
                 if (currentObjectId && currentObjectId !== id) {
                     return null;
                 }
@@ -77,6 +77,8 @@ export default function Map() {
                         key={`${id}_${hw_id}`} 
                         objectId={id}
                         hwId={Number(hw_id)}
+                        iconName={icon}
+                        name={visible_name}
                         onClick={setCurrent}
                     />
                 )
