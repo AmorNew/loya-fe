@@ -1,23 +1,30 @@
 import React from "react";
 import cn from 'classnames';
 import { useNavigate } from "react-router-dom";
+import moment from 'moment';
+import 'moment/locale/ru';
 
 import { useAppSelector } from "../../../app/hooks";
 import { selectObjectById } from "../../../app/reducers/collectionsReducer";
 import { selectCurrentObjectId } from "../../../app/reducers/dataReducer";
 
-import styles from './ObjectListItem.module.css';
 import { selectUnitById } from "../../../app/api/loyaBackendAPI";
 import Icon from "../../ui/Icon";
 import { iconTypes } from "../ObjectForm/components/IconSelector";
+import { selectPointByObjectId } from "../../../app/reducers/pointsReducer";
+
+import styles from './ObjectListItem.module.scss';
 
 
-const ObjectItem = ({objectId, markCurrent = true}: any) => {
+
+
+const ObjectItem = ({objectId, markCurrent = true, hideOnlineStatus = false}: any) => {
     const navigate = useNavigate();
+
     const currentObjectId = useAppSelector(selectCurrentObjectId);
-    // const object = useAppSelector((state) => selectObjectById(state, objectId));
 
     const object = useAppSelector(state => selectUnitById(state, objectId));
+    const objectPoint = useAppSelector(state => selectPointByObjectId(state, object?.device?.hw_id))
     
     if (!object) {
         return null;
@@ -33,15 +40,31 @@ const ObjectItem = ({objectId, markCurrent = true}: any) => {
  
     const {visible_name, icon, vehicle: {make, model}} = object;
 
-    const lastActive = 'Был активен 30 минут назад';
-
     const iconProps = iconTypes[icon];
+    
+    let isOnline = false;
+    let lastActive = '';
+
+    if (!hideOnlineStatus && objectPoint) {
+        const {navigationTime} = objectPoint;
+
+        const navigationDate = new Date(navigationTime).getTime();
+        const now = new Date().getTime();
+
+        const lastTimeMillis = now - navigationDate;
+
+        isOnline = lastTimeMillis/(1000 * 60) < 15;
+        
+        if (!isOnline) {
+            lastActive = `Был активен ${moment(navigationDate).fromNow()}`
+        }
+    }
 
     return (
         <div className={cn(styles.root, {[styles.isCurrent]: isCurrent, [styles.clickable]: markCurrent})} onClick={onClick}>
             <div className={styles.icon} style={{background: iconProps?.background}}>
                 {iconProps && <Icon type={iconProps.icon} color={iconProps.color} />}
-                <div className={styles.status} />
+                {!hideOnlineStatus && <div className={cn(styles.status, {[styles.online]: isOnline})} />}
             </div>
             <div className={styles.wrapper}>
                 <div className={styles.wrapperRow}>
@@ -53,7 +76,7 @@ const ObjectItem = ({objectId, markCurrent = true}: any) => {
 
                 <div className={styles.wrapperRow}>
                     <div className={styles.mark}>{make}, {model}</div>
-                    <div className={styles.lastActive}>{lastActive}</div>
+                    {!hideOnlineStatus && lastActive && <div className={styles.lastActive}>{lastActive}</div>}
                 </div>
             </div>
         </div>

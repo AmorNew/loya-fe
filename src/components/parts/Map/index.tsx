@@ -30,9 +30,9 @@ export default function Map() {
   useEffect(() => {
     if (map) {
       if (currentObjectPoint) {
-        // map.setView([currentObjectPoint.latitude, currentObjectPoint.longitude], map.getZoom(), { animate: true, duration: 1 });
-        setTimeout(() => {map.invalidateSize(); }, 0);
-        // setTimeout(() => {map.invalidateSize(true); }, 300);
+        map.setView([currentObjectPoint.latitude, currentObjectPoint.longitude], map.getZoom(), { animate: true, duration: 1 });
+        // setTimeout(() => {map.invalidateSize(); }, 0);
+        setTimeout(() => {map.invalidateSize(true); }, 300);
       } else {
 
         // map.setView([55.7522, 37.6156], map.getZoom());
@@ -40,8 +40,8 @@ export default function Map() {
         // if (bounds.length) {
         //   map.fitBounds(bounds);
         // }
-        setTimeout(() => {map.invalidateSize(); }, 0);
-        // setTimeout(() => {map.invalidateSize(true); }, 300);
+        // setTimeout(() => {map.invalidateSize(); }, 0);
+        setTimeout(() => {map.invalidateSize(true); }, 300);
       }
     }
   }, [currentObjectId, currentObjectPoint, map, bounds]);

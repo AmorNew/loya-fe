@@ -51,6 +51,8 @@ const currentObjects = useAppSelector(selectAllUnits);
           stream.on('data', (point: Point) => {
 
             dispatch(setPoint(point.toObject()));
+
+            // console.log(point.toObject());
           });
         }
 
@@ -63,6 +65,8 @@ const currentObjects = useAppSelector(selectAllUnits);
         stream.on('data', (point: Point) => {
 
           dispatch(setPoint(point.toObject()));
+
+          // console.log(point.toObject());
         });
       }
 

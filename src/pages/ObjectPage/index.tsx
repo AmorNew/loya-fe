@@ -14,7 +14,7 @@ export default function ObjectPage() {
     <div className={styles.layout}>
       <SideBar />
 
-      <ObjectList />
+      <ObjectList hideOnlineStatus={true} />
 
       <div className={styles.cardWrapper}>
         <Routes>

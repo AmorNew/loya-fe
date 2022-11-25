@@ -53,6 +53,10 @@
     order: 1;
     flex-grow: 0;
     z-index: 1;
+
+    &.online {
+        background: #10B981;
+    }
 }
 
 .wrapper {

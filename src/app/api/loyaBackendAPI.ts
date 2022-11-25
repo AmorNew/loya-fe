@@ -17,7 +17,7 @@ export const loyaBackendApi = createApi({
       const identity = (getState() as RootState).user.identity;
 
       if (identity !== undefined && identity !== false) {
-        // headers.set('x-user-id', String(identity.id))
+        headers.set('x-user-id', String(identity.id))
       }
     
       return headers
@@ -46,7 +46,7 @@ export const loyaBackendApi = createApi({
 
         const points = data.result.units.reduce((acc: Point.AsObject[], {device: {hw_id}, position}: Unit): Point.AsObject[] => {
           if (position) {
-            const {latitude, longitude, last_nav_data: {nsat, course, speed}} = position;
+            const {latitude, longitude, last_nav_data: {nsat, course, speed}, updated_at} = position;
 
             let point: Point.AsObject  = {
               deviceId: hw_id,
@@ -62,8 +62,8 @@ export const loyaBackendApi = createApi({
               ns: 0,
               liquidSensorsList: [],
               anSensorsList: [],
-              navigationTime: '',
-              receivingTime: ''
+              navigationTime: updated_at,
+              receivingTime: updated_at,
             }
 
             acc.push(point);

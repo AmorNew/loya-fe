@@ -10,7 +10,7 @@ import { useFilterUnitsQuery, useStatusQuery } from "../../../app/api/loyaBacken
 import Button from "../../ui/Button";
 
 
-const ObjectList = () => {
+const ObjectList = ({hideOnlineStatus = false}: {hideOnlineStatus?: boolean}) => {
     const location = useLocation();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -43,7 +43,7 @@ const ObjectList = () => {
     if (isLoading) {
         content = <div>Loading...</div>;
       } else if (isSuccess) {
-        content = units.map(({id}: any) => (<ObjectItem key={id} objectId={id} />));
+        content = units.map(({id}: any) => (<ObjectItem key={id} objectId={id} hideOnlineStatus={hideOnlineStatus} />));
       } else if (isError) {
         content = <div>{error.toString()}</div>;
       }
