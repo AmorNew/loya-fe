@@ -36,7 +36,12 @@ export const counterSlice = createSlice({
       action.payload.forEach((point) => {
         const {deviceId} = point;
 
-        state[deviceId] = state[deviceId] || point;
+        const prevNavigationTime = new Date(state[deviceId]?.navigationTime);
+        const nextNavigationTime = new Date(point.navigationTime);
+
+        if (!state[deviceId]?.navigationTime || nextNavigationTime > prevNavigationTime) {
+          state[deviceId] = state[deviceId] || point;
+        }
       });
     },
   },
