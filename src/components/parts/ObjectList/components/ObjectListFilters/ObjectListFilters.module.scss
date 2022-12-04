@@ -1,0 +1,102 @@
+.root {
+    padding: 0 11px 16px;
+    width: 298px;
+    display: flex;
+    flex-direction: row;
+}
+
+.filterButton {
+    box-sizing: border-box;
+
+    width: 48px;
+    height: 48px;
+
+    /* System BG/White */
+
+    background: #FFFFFF;
+    /* System Graph/Line Gray */
+
+    border: 1px solid #E1E4EB;
+    border-radius: 4px;
+    
+    display: flex;
+
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+}
+
+.filterInput {
+    box-sizing: border-box;
+
+    width: 186px;
+    height: 48px;
+    
+    /* System BG/White */
+    
+    background: #FFFFFF;
+    /* System Graph/Line Gray */
+    
+    border: 1px solid #E1E4EB;
+    border-radius: 4px;
+    margin: 0 8px;
+
+    box-sizing: border-box;
+    width: 186px;
+    height: 48px;
+    background: #FFFFFF;
+    border: 1px solid #E1E4EB;
+    border-radius: 4px;
+    margin: 0 8px;
+    padding: 0 32px 0 8px;
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    font-feature-settings: 'cv04' on, 'ss03' on, 'ss09' on;
+
+    &:focus {
+        border: 1px solid #155E75;
+        outline: none;
+    }
+}
+
+.filterInputWrapper {
+    position: relative;
+}
+
+.sortButton {
+    box-sizing: border-box;
+
+    width: 48px;
+    height: 48px;
+    
+    /* System BG/White */
+    
+    background: #FFFFFF;
+    /* System Graph/Line Gray */
+    
+    border: 1px solid #E1E4EB;
+    border-radius: 4px;
+
+    display: flex;
+
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+}
+
+.searhIcon {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+}

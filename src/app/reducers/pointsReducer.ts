@@ -15,8 +15,21 @@ export const counterSlice = createSlice({
   reducers: {
     setPoint: (state, action: PayloadAction<Point.AsObject>) => {
         const {deviceId} = action.payload;
+        
+        const prevNavigationTime = new Date(state[deviceId].navigationTime);
+        const nextNavigationTime = new Date(action.payload.navigationTime)
 
-        state[deviceId] = action.payload;
+        if (nextNavigationTime > prevNavigationTime) {
+          state[deviceId] = action.payload;
+        }
+
+        if (nextNavigationTime < prevNavigationTime) {
+          console.error('-------------------');
+          console.error('nextNavigationTime < prevNavigationTime');
+          console.error('next point', action.payload);
+          console.error('prevNavigationTime', prevNavigationTime);
+          console.error('nextNavigationTime', nextNavigationTime);
+        }
     },
     
     setPoints: (state, action: PayloadAction<Point.AsObject[]>) => {

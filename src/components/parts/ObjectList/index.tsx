@@ -1,16 +1,20 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import styles from './ObjectList.module.css';
 import ObjectListFilters from "./components/ObjectListFilters";
 import ObjectItem from "../ObjectItem";
-import { useAppDispatch } from "../../../app/hooks";
-import { setCurrentObjectId } from "../../../app/reducers/dataReducer";
-import { useFilterUnitsQuery, useStatusQuery } from "../../../app/api/loyaBackendAPI";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { selectSearchParams, setCurrentObjectId } from "../../../app/reducers/dataReducer";
+import { useFilterUnitsQuery } from "../../../app/api/loyaBackendAPI";
 import Button from "../../ui/Button";
 
 
 const ObjectList = ({hideOnlineStatus = false}: {hideOnlineStatus?: boolean}) => {
+    const [search, setSearch] = useState<string>('');
+
+    const searchParams = useAppSelector(selectSearchParams);
+
     const location = useLocation();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -23,11 +27,8 @@ const ObjectList = ({hideOnlineStatus = false}: {hideOnlineStatus?: boolean}) =>
         isSuccess,
         isError,
         error
-    } = useFilterUnitsQuery('');
+    } = useFilterUnitsQuery(searchParams);
 
-    const {data: status} = useStatusQuery('');
-
-      
     useEffect(() => {
         const objectId = location.pathname.split('/')[2];
         

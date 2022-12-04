@@ -46,7 +46,7 @@ const ObjectItem = ({objectId, markCurrent = true, hideOnlineStatus = false}: an
     let lastActive = '';
 
     if (!hideOnlineStatus && objectPoint) {
-        const {navigationTime} = objectPoint;
+        const {navigationTime, speed} = objectPoint;
 
         const navigationDate = new Date(navigationTime).getTime();
         const now = new Date().getTime();
@@ -55,6 +55,10 @@ const ObjectItem = ({objectId, markCurrent = true, hideOnlineStatus = false}: an
 
         isOnline = lastTimeMillis/(1000 * 60) < 15;
         
+        if (speed > 0) {
+            lastActive = `${speed} км/ч`;
+        }
+
         if (!isOnline) {
             lastActive = `Был активен ${moment(navigationDate).fromNow()}`
         }
@@ -64,7 +68,12 @@ const ObjectItem = ({objectId, markCurrent = true, hideOnlineStatus = false}: an
         <div className={cn(styles.root, {[styles.isCurrent]: isCurrent, [styles.clickable]: markCurrent})} onClick={onClick}>
             <div className={styles.icon} style={{background: iconProps?.background}}>
                 {iconProps && <Icon type={iconProps.icon} color={iconProps.color} />}
-                {!hideOnlineStatus && <div className={cn(styles.status, {[styles.online]: isOnline})} />}
+                {!hideOnlineStatus && <div 
+                    className={cn(styles.status, {
+                        [styles.online]: isOnline,
+                        [styles.play]: objectPoint && objectPoint.speed > 0,
+                    })} 
+                />}
             </div>
             <div className={styles.wrapper}>
                 <div className={styles.wrapperRow}>

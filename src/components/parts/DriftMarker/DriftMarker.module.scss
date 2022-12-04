@@ -1,61 +1,18 @@
 .root {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-content: center;
-    justify-content: center;
-    align-items: center;
-
-    position: relative;
-
-    width: 38px;
-    height: 38px;
-
-    margin-top: -35px;
-    margin-left: -13px;
-}
-
-.iconWrapper {
     position: absolute;
-    top: 2px;
+    width: 32px;
+    height: 44px;
+    bottom: 0px;
+    left: -15px;
 
-    &.white > svg > path:not(:last-child) {
-        fill: #FFFFFF ;
-    }
-
-    &.grey > svg > path:not(:last-child) {
-        fill: #929BAD ;
-    }
-
-    &.yellow > svg > path:not(:last-child) {
-        fill: #F5C545 ;
-    }
-
-    &.black > svg > path:not(:last-child) {
-        fill: #1B1F26 ;
-    } 
-
-    &.breeze > svg > path:not(:last-child) {
-        fill: #155E75 ;
-    } 
-
-    &.purple > svg > path:not(:last-child) {
-        fill: #6366F1 ;
-    } 
-
-    &.cyan > svg > path:not(:last-child) {
-        fill: #06B6D4 ;
-    } 
-
-    &.green > svg > path:not(:last-child) {
-        fill: #10B981 ;
-    }
+    transform-origin: bottom;
+    transition: transform 0.6s;
 }
 
 .name {
     position: absolute;
 
-    top: -15px;
+    top: -35px;
 
     font-family: 'IBM Plex Sans';
     font-style: normal;
@@ -71,4 +28,165 @@
     color: #1B1F26;
 
     white-space: nowrap;
+}
+
+.divIcon {
+    // background-color: red;
+}
+
+.circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #06B6D4;
+    border: 3px solid white;
+    box-sizing: border-box;
+    position: absolute;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+    transition: transform 0.6s;
+
+    &.dynamic {
+        z-index: 1;
+    }
+
+    &.white {
+        background-color: #FFFFFF ;
+    }
+
+    &.grey {
+        background-color: #929BAD ;
+    }
+
+    &.yellow {
+        background-color: #F5C545 ;
+    }
+
+    &.black {
+        background-color: #1B1F26 ;
+    } 
+    &.breeze {
+        background-color: #155E75 ;
+    } 
+    &.purple {
+        background-color: #6366F1 ;
+    } 
+    &.cyan {
+        background-color: #06B6D4 ;
+    } 
+    &.green {
+        background-color: #10B981 ;
+    }
+    
+}
+
+.parked {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: white;
+    width: 13px;
+    height: 13px;
+    font-size: 9px;
+    line-height: 8px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    position: absolute;
+    z-index: 0;
+    left: 8px;
+    top: 25px;
+    border-radius: -3px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 13px solid #06B6D4;
+
+    &:before {
+        content: "";
+        display: block;
+        width: 0;
+        height: 0;
+        position: absolute;
+        /* z-index: -1; */
+        left: -8px;
+        top: -13px;
+        border-radius: -3px;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 12px solid #06B6D4;
+    }
+
+    &:after {
+        content: "";
+        display: block;
+        width: 0;
+        height: 0;
+        position: absolute;
+        z-index: -1;
+        left: -10px;
+        top: -11px;
+        border-radius: -3px;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 16px solid white;
+    }
+
+    &.white {
+        &, &::before {
+            border-top-color: #FFFFFF;
+        }
+    }
+
+    &.grey {
+        &, &::before {
+            border-top-color: #929BAD ;
+        }
+    }
+
+    &.yellow {
+        &, &::before {
+            border-top-color: #F5C545 ;
+        }
+    }
+
+    &.black {
+        &, &::before {
+            border-top-color: #1B1F26 ;
+        }
+    } 
+    &.breeze {
+        &, &::before {
+            border-top-color: #155E75 ;
+        }
+    } 
+    &.purple {
+        &, &::before {
+            border-top-color: #6366F1 ;
+        }
+    } 
+    &.cyan {
+        &, &::before {
+            border-top-color: #06B6D4 ;
+        }
+    } 
+    &.green {
+        &, &::before {
+            border-top-color: #10B981 ;
+        }
+    }
 }

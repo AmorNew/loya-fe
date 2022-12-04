@@ -10,6 +10,10 @@ import { ReactComponent as LocationIcon } from './icons/location.svg';
 import { ReactComponent as ExclamationIcon } from './icons/exclamation.svg';
 import { ReactComponent as CarIcon } from './icons/car.svg';
 import { ReactComponent as RoadhelpIcon } from './icons/roadhelp.svg';
+import { ReactComponent as SearchIcon } from './icons/search.svg';
+import { ReactComponent as FilterIcon } from './icons/filter.svg';
+import { ReactComponent as SortASCIcon } from './icons/sort_ASC.svg';
+import { ReactComponent as SortDESCIcon } from './icons/sort_DESC.svg';
 
 import styles from './Icon.module.scss';
 
@@ -44,6 +48,14 @@ const IconSVG = ({type}: any): any => {
             return <CarIcon />;
         case 'roadhelp':
             return <RoadhelpIcon />;
+        case 'search':
+            return <SearchIcon />;
+        case 'filter':
+            return <FilterIcon />;
+        case 'sortASC':
+            return <SortASCIcon />;
+        case 'sortDESC':
+            return <SortDESCIcon />;
     }
 }
 

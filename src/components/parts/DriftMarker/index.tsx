@@ -15,13 +15,34 @@ import styles from './DriftMarker.module.scss'
 import { iconTypes } from '../ObjectForm/components/IconSelector';
 
 
-const CustomMarker = ({iconType, color, name}: {iconType: string, color: IconColor, name: string}) => (
-    <div className={styles.root}>
-        <div className={styles.name}>{name}</div>
-        <i className={cn(styles.iconWrapper, styles[color])}>
-            <MarkerIcon />
-        </i>
-        <Icon type={iconType} size='s' />
+const CustomMarker = ({
+    iconType, 
+    color, 
+    name,
+    course,
+    speed,
+}: {
+    iconType: string, 
+    color: IconColor, 
+    name: string,
+    course: number,
+    speed: number,
+}) => (
+    <div className={styles.root} style={{ transform: speed > 0 ? `rotate(${course}deg)` : '' }}>
+        <div 
+            className={cn(styles.circle, styles[color], {[styles.dynamic]: !!speed})} 
+            style={{ transform: speed > 0 ? `rotate(${360 - course}deg)` : '' }}
+        >
+            <Icon type={iconType} size='s' />
+
+            {!speed && <div className={styles.parked}>P</div>}
+
+            <div className={styles.name} style={{top: `-${30 - 5 * Math.cos(course * (Math.PI / 180))}px`}}>
+                {name}
+            </div>
+        </div>
+
+        <div className={cn(styles.triangle, styles[color])} />
     </div>
 )
 
@@ -35,7 +56,7 @@ const DriftMarker = (
         return null;
     }
 
-    const {latitude, longitude} = point;
+    const {latitude, longitude, course, speed} = point;
 
     const position: LatLngExpression = {
         lat: latitude,
@@ -45,8 +66,15 @@ const DriftMarker = (
     const iconProps = iconTypes[iconName] || {};
     
     const divIcon = new L.DivIcon({
-        html: ReactDOMServer.renderToString(<CustomMarker iconType={iconProps.icon} color={iconProps.color} name={name} />),
-        className: 'loya-div-icon',
+        html: ReactDOMServer.renderToString(<CustomMarker 
+            iconType={iconProps.icon} 
+            color={iconProps.color} 
+            name={name} 
+            course={course + 180}
+            speed={speed}
+        />),
+        className: styles.divIcon,
+        iconSize: [1, 1],
     });
 
     return (

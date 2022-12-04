@@ -73,8 +73,6 @@ const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
     const [createTrigger, createResult] = useCreateUnitMutation();
     const [updateTrigger, updateResult] = useUpdateUnitMutation();
 
-    // console.log('updateResult', updateResult);
-
     const navigate = useNavigate();
 
     const handleSubmit = async (e: any) => {

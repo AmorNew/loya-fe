@@ -6,6 +6,7 @@ import { RootState } from '../store';
 import { Unit, UpdateUnit } from '../reducers/collectionsReducer';
 import { Point } from '../../schema/position_pb';
 import { setPoints } from '../reducers/pointsReducer';
+import { counterSlice, SearchParams, selectSearchParams } from '../reducers/dataReducer';
 
 
 export const loyaBackendApi = createApi({
@@ -16,8 +17,8 @@ export const loyaBackendApi = createApi({
       
       const identity = (getState() as RootState).user.identity;
 
-      if (identity !== undefined && identity !== false) {
-        headers.set('x-user-id', String(identity.id))
+      if (identity !== undefined && identity !== false && process.env.NODE_ENV === "development") {
+        headers.set('x-user-id', String(identity.id));
       }
     
       return headers
@@ -29,15 +30,30 @@ export const loyaBackendApi = createApi({
       query: () => ({ url: `status`, method: 'POST', credentials: 'include', }),
     }),
     filterUnits: builder.query({
-      query: () => ({ credentials: 'include', url: `filterUnits`, method: 'POST', body: 
-        {
-          "filter": {
-            "text": "",
-          },
-          "limit": 100,
-          "offset": 0
-        }
-      }),
+      query: ({
+        text = '', 
+        order_by = "visible_name",
+        order_direction = "asc",
+    }) => {
+      const boxString = localStorage.getItem('box');
+      const box = boxString ? JSON.parse(boxString) : undefined;
+
+      return ({ 
+        credentials: 'include', 
+        url: `filterUnits`, 
+        method: 'POST', 
+        body: 
+          {
+            "filter": {
+              text,
+              box,
+              order_by,
+              order_direction,
+            },
+            "limit": 100,
+            "offset": 0
+          }
+      })},
       async onCacheEntryAdded(
         arg,
         { cacheDataLoaded, dispatch }
@@ -73,15 +89,9 @@ export const loyaBackendApi = createApi({
         }, []);
 
         dispatch(setPoints(points));
-
-        // updateCachedData().then(res => {
-        //   console.log();
-        // })
       },
       providesTags: (result) =>
         {
-          console.log('result', result);
-
           return result
             ? [
                 ...result.result.units.map(({ id }: any) => ({ type: 'Unit', id } as const)),
@@ -114,14 +124,9 @@ export const {
 
 export default loyaBackendApi;
 
-export const selectFilterUnitsResult = loyaBackendApi.endpoints.filterUnits.select('');
-
 const emptyUsers: any = [];
 
-export const selectAllUnits = createSelector(
-  selectFilterUnitsResult,
-  usersResult => usersResult?.data?.result?.units ?? emptyUsers
-)
+export const selectAllUnits = (state: RootState) => loyaBackendApi.endpoints.filterUnits.select(state.data.searchParams)(state)?.data?.result?.units || emptyUsers;
 
 export const selectUnitById = createSelector(
   selectAllUnits,

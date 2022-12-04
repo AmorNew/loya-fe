@@ -7,7 +7,7 @@ import Map from '../../components/parts/Map';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
-import { selectCurrentObjectId } from '../../app/reducers/dataReducer';
+import { selectCurrentObjectId, selectSearchParams } from '../../app/reducers/dataReducer';
 
 import { PositionClient } from '../../schema/PositionServiceClientPb';
 import { Point, Unit } from '../../schema/position_pb';
@@ -23,15 +23,17 @@ export default function MapPage() {
 
   const currentObjectId = useAppSelector(selectCurrentObjectId);
   
+  const searchParams = useAppSelector(selectSearchParams);
+  
   const {
     data,
     isLoading,
     isSuccess,
     isError,
     error
-} = useFilterUnitsQuery('');
+  } = useFilterUnitsQuery(searchParams);
 
-const currentObjects = useAppSelector(selectAllUnits);
+  const currentObjects = useAppSelector(selectAllUnits);
 
   useEffect(() => {
       let stream: any = undefined;
@@ -49,10 +51,10 @@ const currentObjects = useAppSelector(selectAllUnits);
           stream = client.streaming(request);
 
           stream.on('data', (point: Point) => {
-
             dispatch(setPoint(point.toObject()));
 
-            // console.log(point.toObject());
+            // console.log('-----------------------');
+            // console.log('point', point.toObject());
           });
         }
 
@@ -63,10 +65,10 @@ const currentObjects = useAppSelector(selectAllUnits);
         stream = client.streaming(request);
 
         stream.on('data', (point: Point) => {
-
           dispatch(setPoint(point.toObject()));
 
-          // console.log(point.toObject());
+          // console.log('-----------------------');
+          // console.log('point', point.toObject());
         });
       }
 
