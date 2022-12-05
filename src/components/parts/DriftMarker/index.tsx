@@ -29,7 +29,10 @@ const CustomMarker = ({
     speed: number,
     isOnline: boolean,
 }) => (
-    <div className={styles.root} style={{ transform: isOnline && speed > 0 ? `rotate(${course}deg)` : 'rotate(180deg)' }}>
+    <div 
+        className={cn(styles.root, {[styles.faded]: !isOnline})} 
+        style={{ transform: isOnline && speed > 0 ? `rotate(${course}deg)` : 'rotate(180deg)' }}
+    >
         <div 
             className={cn(styles.circle, styles[color], {[styles.dynamic]: isOnline && !!speed})} 
             style={{ transform: isOnline && speed > 0 ? `rotate(-${course}deg)` : 'rotate(-180deg)' }}

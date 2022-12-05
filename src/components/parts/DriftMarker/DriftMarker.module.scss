@@ -6,6 +6,10 @@
     left: -15px;
     transform-origin: top;
     transition: transform 0.6s;
+
+    &.faded {
+        opacity: 0.8;
+    }
 }
 
 .name {

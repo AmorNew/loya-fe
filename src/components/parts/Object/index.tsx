@@ -66,7 +66,6 @@ const Object = () => {
                             </div>
                         ))}
                 </>
-
             }
         </div>
     );

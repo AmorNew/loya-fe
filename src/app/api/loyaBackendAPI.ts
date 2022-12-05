@@ -132,4 +132,4 @@ export const selectUnitById = createSelector(
   selectAllUnits,
   (state: any, unitId: any) => unitId,
   (units, unitId) => units.find((unit: any) => unit.id === unitId)
-)
+);
