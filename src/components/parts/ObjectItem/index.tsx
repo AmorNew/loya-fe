@@ -11,7 +11,7 @@ import { selectCurrentObjectId } from "../../../app/reducers/dataReducer";
 import { selectUnitById } from "../../../app/api/loyaBackendAPI";
 import Icon from "../../ui/Icon";
 import { iconTypes } from "../ObjectForm/components/IconSelector";
-import { selectPointByObjectId } from "../../../app/reducers/pointsReducer";
+import { isPointOnline, selectPointByObjectId } from "../../../app/reducers/pointsReducer";
 
 import styles from './ObjectListItem.module.scss';
 
@@ -46,15 +46,12 @@ const ObjectItem = ({objectId, markCurrent = true, hideOnlineStatus = false}: an
     let lastActive = '';
 
     if (!hideOnlineStatus && objectPoint) {
-        const {navigationTime, speed} = objectPoint;
+        isOnline = isPointOnline(objectPoint);
+
+        const { speed, navigationTime } = objectPoint;
 
         const navigationDate = new Date(navigationTime).getTime();
-        const now = new Date().getTime();
 
-        const lastTimeMillis = now - navigationDate;
-
-        isOnline = lastTimeMillis/(1000 * 60) < 15;
-        
         if (speed > 0) {
             lastActive = `${speed} км/ч`;
         }
