@@ -60,4 +60,15 @@ export const selectPointsBounds = (state: RootState): LatLngTuple[] => {
     return bounds;
 };
 
+export const isPointOnline = (point: Point.AsObject): boolean => {
+  const {navigationTime} = point;
+
+  const navigationDate = new Date(navigationTime).getTime();
+  const now = new Date().getTime();
+
+  const lastTimeMillis = now - navigationDate;
+
+  return lastTimeMillis/(1000 * 60) < 15;
+}; 
+
 export default counterSlice.reducer;

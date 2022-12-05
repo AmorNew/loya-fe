@@ -7,12 +7,11 @@ import cn from 'classnames';
 import { UnitId } from '../../../app/reducers/collectionsReducer';
 import { useAppSelector } from '../../../app/hooks';
 import { LatLngExpression } from 'leaflet';
-import { selectPointByObjectId } from '../../../app/reducers/pointsReducer';
+import { isPointOnline, selectPointByObjectId } from '../../../app/reducers/pointsReducer';
 import Icon, { IconColor } from '../../ui/Icon';
-import { ReactComponent as MarkerIcon } from './marker.svg';
+import { iconTypes } from '../ObjectForm/components/IconSelector';
 
 import styles from './DriftMarker.module.scss'
-import { iconTypes } from '../ObjectForm/components/IconSelector';
 
 
 const CustomMarker = ({
@@ -21,23 +20,26 @@ const CustomMarker = ({
     name,
     course,
     speed,
+    isOnline,
 }: {
     iconType: string, 
     color: IconColor, 
     name: string,
     course: number,
     speed: number,
+    isOnline: boolean,
 }) => (
-    <div className={styles.root} style={{ transform: speed > 0 ? `rotate(${course}deg)` : '' }}>
+    <div className={styles.root} style={{ transform: isOnline && speed > 0 ? `rotate(${course}deg)` : 'rotate(180deg)' }}>
         <div 
-            className={cn(styles.circle, styles[color], {[styles.dynamic]: !!speed})} 
-            style={{ transform: speed > 0 ? `rotate(${360 - course}deg)` : '' }}
+            className={cn(styles.circle, styles[color], {[styles.dynamic]: isOnline && !!speed})} 
+            style={{ transform: isOnline && speed > 0 ? `rotate(-${course}deg)` : 'rotate(-180deg)' }}
         >
             <Icon type={iconType} size='s' />
 
-            {!speed && <div className={styles.parked}>P</div>}
+            {isOnline && !speed && <div className={styles.parked}>P</div>}
+            {!isOnline && <div className={styles.offline} />}
 
-            <div className={styles.name} style={{top: `-${30 - 5 * Math.cos(course * (Math.PI / 180))}px`}}>
+            <div className={styles.name} style={{top: `${ - 27 - 8 * Math.cos(course * (Math.PI / 180))}px`}}>
                 {name}
             </div>
         </div>
@@ -58,6 +60,8 @@ const DriftMarker = (
 
     const {latitude, longitude, course, speed} = point;
 
+    const isOnline = isPointOnline(point)
+
     const position: LatLngExpression = {
         lat: latitude,
         lng: longitude,
@@ -70,8 +74,9 @@ const DriftMarker = (
             iconType={iconProps.icon} 
             color={iconProps.color} 
             name={name} 
-            course={course + 180}
+            course={course}
             speed={speed}
+            isOnline={isOnline}
         />),
         className: styles.divIcon,
         iconSize: [1, 1],
