@@ -6,6 +6,7 @@ import dataReducer from './reducers/dataReducer';
 import userReducer from './reducers/userReducer';
 import { loyaBackendApi } from './api/loyaBackendAPI';
 import pointsReducer from './reducers/pointsReducer';
+import { nominatimApi } from './api/nominatimAPI';
 
 
 export const store = configureStore({
@@ -15,9 +16,11 @@ export const store = configureStore({
     points: pointsReducer,
     user: userReducer,
     [loyaBackendApi.reducerPath]: loyaBackendApi.reducer,
+    [nominatimApi.reducerPath]: nominatimApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(loyaBackendApi.middleware),
+      getDefaultMiddleware()
+        .concat(loyaBackendApi.middleware, nominatimApi.middleware),
 });
 
 setupListeners(store.dispatch);

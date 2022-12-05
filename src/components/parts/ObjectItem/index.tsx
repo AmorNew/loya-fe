@@ -5,7 +5,6 @@ import moment from 'moment';
 import 'moment/locale/ru';
 
 import { useAppSelector } from "../../../app/hooks";
-import { selectObjectById } from "../../../app/reducers/collectionsReducer";
 import { selectCurrentObjectId } from "../../../app/reducers/dataReducer";
 
 import { selectUnitById } from "../../../app/api/loyaBackendAPI";
@@ -24,7 +23,7 @@ const ObjectItem = ({objectId, markCurrent = true, hideOnlineStatus = false}: an
     const currentObjectId = useAppSelector(selectCurrentObjectId);
 
     const object = useAppSelector(state => selectUnitById(state, objectId));
-    const objectPoint = useAppSelector(state => selectPointByObjectId(state, object?.device?.hw_id))
+    const objectPoint = useAppSelector(state => selectPointByObjectId(state, object?.device?.hw_id));
     
     if (!object) {
         return null;
