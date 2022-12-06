@@ -1,28 +1,38 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, useMapEvents, useMap } from 'react-leaflet'
-import { LatLngExpression, Map as LeafletMap } from 'leaflet';
+import { LatLngExpression } from 'leaflet';
 
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { Unit, UnitId } from '../../../app/reducers/collectionsReducer';
-import { selectCurrentObjectId, selectSearchParams, setSearchParams } from '../../../app/reducers/dataReducer';
+import { Unit as UnitCollection, UnitId } from '../../../app/reducers/collectionsReducer';
+import { selectCurrentObjectId, setSearchParams } from '../../../app/reducers/dataReducer';
 import DriftMarker from '../DriftMarker';
 
 import { selectAllUnits, selectUnitById } from '../../../app/api/loyaBackendAPI';
-import { selectPointByObjectId, selectPointsBounds } from '../../../app/reducers/pointsReducer';
+import { selectPointByObjectId } from '../../../app/reducers/pointsReducer';
+import { PositionClient } from '../../../schema/PositionServiceClientPb';
+import { Point, Unit } from '../../../schema/position_pb';
+import { Unit as UnitModel } from '../../../app/reducers/collectionsReducer';
+import { setPoint } from '../../../app/reducers/pointsReducer';
 
 import styles from './Map.module.scss';
 
 
-function MapActions() {
+const MapActions = () => {
   const dispatch = useAppDispatch();
 
   const currentObjectId = useAppSelector(selectCurrentObjectId);
   const currentObject = useAppSelector(state => selectUnitById(state, currentObjectId));
   const currentObjectPoint = useAppSelector(state => selectPointByObjectId(state, currentObject?.device?.hw_id))
-  
+
+  let timerId: any;
+
   const map = useMapEvents({
     moveend: () => {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+
       const center = map.getCenter();
       const bounds = map.getBounds();
       const zoom = map.getZoom();
@@ -41,25 +51,26 @@ function MapActions() {
         },
       };
 
-      if (!currentObjectPoint){
-        dispatch(setSearchParams({box}));
-
-        localStorage.setItem('center', JSON.stringify(center));
-        localStorage.setItem('zoom', JSON.stringify(zoom));
-        localStorage.setItem('box', JSON.stringify(box))
+      if (!currentObjectPoint) {
+        timerId = setTimeout(() => {
+          dispatch(setSearchParams({box}));
+        }, 1500);
       }
+
+      localStorage.setItem('center', JSON.stringify(center));
+      localStorage.setItem('zoom', JSON.stringify(zoom));
+      localStorage.setItem('box', JSON.stringify(box));
     },
   });
 
   return null
 };
 
-export default function Map() {
-  const [map, setMap] = useState<LeafletMap | null>(null);
-  const [center] = useState<LatLngExpression | undefined>(JSON.parse(localStorage.getItem('center') || '[55.7522, 37.6156]'));
-  const [zoom] = useState<number>(Number(JSON.parse(localStorage.getItem('zoom') || '6')));
+const Markers = () => {
+  const map = useMap();
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const currentObjects = useAppSelector(selectAllUnits);
 
@@ -67,26 +78,57 @@ export default function Map() {
   const currentObject = useAppSelector(state => selectUnitById(state, currentObjectId));
   const currentObjectPoint = useAppSelector(state => selectPointByObjectId(state, currentObject?.device?.hw_id))
 
-  const bounds = useAppSelector(selectPointsBounds);
+  useEffect(() => {
+      let stream: any = undefined;
+      
+      const client = new PositionClient(process.env.REACT_APP_GRPC || '');
+      
+      if (currentObjectId) {
+        const currentObject = currentObjects.find(({id}: UnitModel) => id === currentObjectId);
+        
+        if (currentObject) {
+          const request = new Unit();
+
+          request.setObjectIdsList([currentObject.device.hw_id]);    
+          
+          stream = client.streaming(request);
+
+          stream.on('data', (point: Point) => {
+            dispatch(setPoint(point.toObject()));
+
+            // console.log('-----------------------');
+            // console.log('point', point.toObject());
+          });
+        }
+
+      } else if (currentObjects) {
+        const request = new Unit();
+        request.setObjectIdsList(currentObjects.map(({device: {hw_id}}: any) => hw_id));    
+        
+        stream = client.streaming(request);
+
+        stream.on('data', (point: Point) => {
+          dispatch(setPoint(point.toObject()));
+
+          // console.log('-----------------------');
+          // console.log('point', point.toObject());
+        });
+      }
+
+    return () => {
+      stream && stream.cancel();
+    };
+  }, [dispatch, currentObjectId, currentObjects]);
 
   useEffect(() => {
     if (map) {
       if (currentObjectPoint) {
-
         map.setView([currentObjectPoint.latitude, currentObjectPoint.longitude], map.getZoom());
-        // setTimeout(() => {map.invalidateSize(); }, 0);
-        setTimeout(() => {map.invalidateSize(true); }, 300);
-      } else {
-        // map.setView([55.7522, 37.6156], map.getZoom());
-        // console.log('bounds', bounds);
-        // if (bounds.length) {
-        //   map.fitBounds(bounds);
-        // }
-        // setTimeout(() => {map.invalidateSize(); }, 0);
-        setTimeout(() => {map.invalidateSize(true); }, 300);
       }
+
+      setTimeout(() => {map.invalidateSize(true); }, 300);
     }
-  }, [currentObjectId, currentObjectPoint, map, bounds]);
+  }, [currentObjectId, currentObjectPoint, map]);
 
   const setCurrent = (objectId: UnitId) => {
     if (currentObjectId === objectId) {
@@ -98,6 +140,36 @@ export default function Map() {
     }
   }
 
+  if (!currentObjects) {
+    return null
+  }
+
+  return (
+    <>
+      {currentObjects.map(({id, icon, visible_name, device: {hw_id}}: UnitCollection) => {
+          if (currentObjectId && currentObjectId !== id) {
+              return null;
+          }
+
+          return (
+              <DriftMarker 
+                  key={`${id}_${hw_id}`} 
+                  objectId={id}
+                  hwId={Number(hw_id)}
+                  iconName={icon}
+                  name={visible_name}
+                  onClick={setCurrent}
+              />
+          )
+      })}
+    </>
+  );
+}
+
+export default function Map() {
+  const [center] = useState<LatLngExpression | undefined>(JSON.parse(localStorage.getItem('center') || '[55.7522, 37.6156]'));
+  const [zoom] = useState<number>(Number(JSON.parse(localStorage.getItem('zoom') || '6')));
+
   return(
     <div className={styles.map}>
         <MapContainer 
@@ -105,30 +177,13 @@ export default function Map() {
             zoom={zoom}
             scrollWheelZoom={true}
             style={{ height: "100vh" }}
-            zoomControl={true}
-            ref={setMap}
-            
+            zoomControl={true}   
         >
           <MapActions />
+
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           
-          {currentObjects 
-          && currentObjects.map(({id, icon, visible_name, device: {hw_id}}: Unit) => {
-              if (currentObjectId && currentObjectId !== id) {
-                  return null;
-              }
-
-              return (
-                  <DriftMarker 
-                      key={`${id}_${hw_id}`} 
-                      objectId={id}
-                      hwId={Number(hw_id)}
-                      iconName={icon}
-                      name={visible_name}
-                      onClick={setCurrent}
-                  />
-              )
-          })}
+          <Markers />
         </MapContainer>
     </div>
   );

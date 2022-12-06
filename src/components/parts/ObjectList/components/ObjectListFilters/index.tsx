@@ -13,8 +13,14 @@ const ObjectListFilters = () => {
 
     const { order_direction } = searchParams;
 
+    let timerId: any;
+
     const handleSearchChange = (text: string) => {
-        dispatch(setSearchParams({text}));
+        if (timerId) {
+            clearTimeout(timerId);
+        }
+
+        timerId = setTimeout(() => dispatch(setSearchParams({text})), 600);
     };
 
     const handleSearchSort = () => {
