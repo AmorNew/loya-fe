@@ -13,7 +13,7 @@ export default function MapPage() {
     <div className={styles.layout}>
       <SideBar />
 
-      <ObjectList />
+      <ObjectList hideAddObjectButton={true} />
 
       <Object />
 

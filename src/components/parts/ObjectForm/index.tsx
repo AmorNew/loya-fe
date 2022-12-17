@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import cn from 'classnames';
+import AsyncSelect from 'react-select/async';
 
 import ObjectCardWrapper from "../ObjectCardWrapper/intex";
 
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
-import { selectUnitById, useCreateUnitMutation, useUpdateUnitMutation } from "../../../app/api/loyaBackendAPI";
+import { selectUnitById, useCreateUnitMutation, useFilterGroupsQuery, useLazyFilterGroupsQuery, useUpdateUnitMutation } from "../../../app/api/loyaBackendAPI";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../../app/hooks";
 import { selectCurrentObjectId } from "../../../app/reducers/dataReducer";
+import IconSelector from "./components/IconSelector";
+import SelectInput from "../../ui/SelectInput";
 
 import styles from './ObjectForm.module.scss';
-import IconSelector from "./components/IconSelector";
+import { Group } from "../../../app/reducers/collectionsReducer";
+import { StylesConfig } from "react-select";
+import GroupSelector from "../GroupSelector";
 
 
 type Props = {
@@ -24,7 +29,7 @@ const formSchema = [
     {rowName: 'Марка', props: {labelText: 'Марка', name: "make"}},
     {rowName: 'Модель', props: {labelText: 'Модель', name: "model"}},
     {rowName: 'Гос. номер', props: {labelText: 'Гос. номер', name: "license_plate"}},
-    {rowName: 'Группа', props: {labelText: 'Группа', name: "group"}},
+    {rowName: 'Группа', props: {labelText: 'Группа', name: "group_ids"}},
     {rowName: 'VIN', props: {labelText: 'VIN', name: "vin"}},
     {rowName: 'Терминал мониторинга', props: {labelText: 'Терминал мониторинга', name: "terminal", value: 'ЕГТС', disabled: true}},
     {rowName: 'Уникальный ID', props: {labelText: 'Уникальный ID', name: "hw_id"}},
@@ -66,22 +71,26 @@ const iconTypes = {
 
 const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
     const [values, setValues] = useState<any>(formSchema.reduce((acc, item) => {
-        acc[String(item.props.name)] = object[item.props.name] || item.props?.value || ''; 
+        if (item.props.name === 'group_ids') {
+            const group_ids = object.groups?.map(({id}: Group) => id);
+
+            acc.group_ids = group_ids || item.props?.value || []; 
+        } else {
+            acc[String(item.props.name)] = object[item.props.name] || item.props?.value || ''; 
+        }
+
         return acc;
     }, {} as any));
 
     const [createTrigger, createResult] = useCreateUnitMutation();
     const [updateTrigger, updateResult] = useUpdateUnitMutation();
 
+
     const navigate = useNavigate();
 
     const handleSubmit = async (e: any) => {
         e.stopPropagation()
         e.preventDefault()
-
-        console.log('submit', values);
-        
-
 
         if (mode === 'edit') {
             handleUpdate();
@@ -92,7 +101,7 @@ const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
 
     const handleCreate = async () => {
         const {
-            group,
+            group_ids,
             hw_id,
             icon,
             license_plate,
@@ -106,6 +115,7 @@ const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
         } = values;
 
         if (
+            group_ids &&
             hw_id &&
             icon &&
             license_plate &&
@@ -138,7 +148,8 @@ const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
                 visible_name,
                 created_at: "",
                 id: 0,
-                updated_at: ""
+                updated_at: "",
+                group_ids,
             }).then(({data}: any) => { 
                 navigate(`/object/${data?.result?.id}`)
             });
@@ -151,7 +162,7 @@ const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
         const {id}= object;
 
         const {
-            group,
+            group_ids,
             hw_id,
             icon,
             license_plate,
@@ -163,17 +174,20 @@ const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
             terminal,
             vin,
         } = values;
-
+        
+        const group_ids_from_object = object.groups?.map(({id}: Group) => id);
+        
         if (
-            hw_id !== object[hw_id] ||
-            icon !== object[icon] ||
-            license_plate !== object[license_plate] ||
-            make !== object[make] ||
-            model !== object[model] ||
-            visible_name !== object[visible_name] ||
-            sim1 !== object[sim1] ||
-            sim2 !== object[sim2] ||
-            vin !== object[vin]
+            hw_id !== object.hw_id ||
+            icon !== object.icon ||
+            license_plate !== object.license_plate ||
+            make !== object.make ||
+            model !== object.model ||
+            visible_name !== object.visible_name ||
+            sim1 !== object.sim1 ||
+            sim2 !== object.sim2 ||
+            vin !== object.vin ||
+            !group_ids.every((v: number, i: number)=> v === group_ids_from_object[i])
         ) {
             updateTrigger({
                 id,
@@ -193,6 +207,7 @@ const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
                     type: 2,
                     vin,
                 },
+                group_ids,
                 visible_name,
             }).then(() => navigate(`/object/${id}`));
         } else {
@@ -231,6 +246,23 @@ const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
                     );
                 }
 
+                if (name === 'group_ids') {
+                    return (
+                        <div key={`${name}-${index}`} className={styles.row}>
+                            <div className={styles.name}>
+                                {rowName}
+                            </div>
+
+                            <GroupSelector object={object} onChange={(value) => {
+                                setValues((prevValues: any) => ({
+                                    ...prevValues,
+                                    [name]: value,
+                                }));
+                            }} />
+                        </div>
+                    );
+                }
+
                 return (
                     <div  key={`${name}-${index}`} className={styles.row}>
                         <div className={styles.name}>
@@ -248,12 +280,12 @@ const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
                                 setValues((prevValues: any) => ({
                                     ...prevValues,
                                     [name]: value,
-                                }))
+                                }));
                             }}
                         />
                     </div>
                 );
-            })}
+            })}       
 
             <div className={styles.buttonRow}>
                 <Button type="button" buttonStyle="secondary" shrink={true} onClick={() => {console.log('ГАЛЯ! У НАС ОТМЕНА!'); navigate(-1);}}>
@@ -291,6 +323,7 @@ const ObjectForm = ({mode = 'new'}: Props) => {
             },
             visible_name,
             id,
+            groups,
         } = currentObject;
 
         object = {
@@ -305,6 +338,7 @@ const ObjectForm = ({mode = 'new'}: Props) => {
             model,
             vin,
             visible_name,
+            groups,
         };
     }
     

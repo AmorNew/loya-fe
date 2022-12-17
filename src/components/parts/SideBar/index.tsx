@@ -41,7 +41,7 @@ const SideBar = () => {
                     if (currentLocation === 'map' && currentObjectId) {
                         navigate('/map');
                     } else {
-                        navigate(`/map/${currentObjectId || ''}`);
+                        navigate(`/map/${currentObjectId === 'new' ? '' : currentObjectId || ''}`);
                     }
                     
                 }} >

@@ -27,6 +27,7 @@ export interface Unit {
         "vin": string
     },
     "visible_name": string,
+    group_ids?: number[],
     position?: {
       last_nav_data: {
         course: number,
@@ -59,7 +60,24 @@ export interface UpdateUnit {
       "type"?: number,
       "vin"?: string
   },
-  "visible_name"?: string
+  "visible_name"?: string,
+  group_ids?: number[],
+};
+
+export interface Group {
+  type: number,
+  name: string,
+  id: number,
+  created_at?: string,
+  updated_at?: string,
+};
+
+export interface UpdateGroup {
+  type: number,
+  name: string,
+  // id: number,
+  // created_at?: string,
+  // updated_at?: string,
 };
 
 export interface CollectionsState {

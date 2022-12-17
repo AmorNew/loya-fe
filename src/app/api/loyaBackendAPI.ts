@@ -3,7 +3,7 @@ import { createSelector } from '@reduxjs/toolkit'
 
 import { RootState } from '../store';
 
-import { Unit, UpdateUnit } from '../reducers/collectionsReducer';
+import { Group, Unit, UpdateGroup, UpdateUnit } from '../reducers/collectionsReducer';
 import { Point } from '../../schema/position_pb';
 import { setPoints } from '../reducers/pointsReducer';
 import { counterSlice, SearchParams, selectSearchParams } from '../reducers/dataReducer';
@@ -24,34 +24,33 @@ export const loyaBackendApi = createApi({
       return headers
     },
   }),
-  tagTypes: ['Unit'],
+  tagTypes: ['Unit', 'Group'],
   endpoints: (builder) => ({
     status: builder.query<Unit, string>({
       query: () => ({ url: `status`, method: 'POST', credentials: 'include', }),
     }),
+
     filterUnits: builder.query({
       query: ({
-        text = '', 
+        text = '',
+        box, 
         order_by = "visible_name",
         order_direction = "asc",
     }) => {
-      const boxString = localStorage.getItem('box');
-      const box = boxString ? JSON.parse(boxString) : undefined;
-
       return ({ 
         credentials: 'include', 
         url: `filterUnits`, 
         method: 'POST', 
         body: 
           {
-            "filter": {
+            filter: {
               text,
               box,
-              order_by,
-              order_direction,
             },
-            "limit": 100,
-            "offset": 0
+            order_by,
+            order_direction,
+            limit: 100,
+            offset: 0
           }
       })},
       async onCacheEntryAdded(
@@ -111,6 +110,79 @@ export const loyaBackendApi = createApi({
       query: (unit: Unit) => ({credentials: 'include', url: `deleteUnit`, method: 'POST', body: unit}),
       invalidatesTags: (result, error, {id}) => [{ type: 'Unit', id }],
     }),
+
+    filterGroups: builder.query({
+      query: ({
+        text = '', 
+        order_by = "name",
+        order_direction = "asc",
+      }) => {
+        return ({ 
+          credentials: 'include', 
+          url: `filterGroups`, 
+          method: 'POST', 
+          body: 
+            {
+              "filter": {
+                text,
+              },
+              order_by,
+              order_direction,
+              limit: 100,
+              offset: 0
+            }
+        })},
+      providesTags: (result) =>
+        {
+          return result
+            ? [
+                ...result.result.groups.map(({ id }: any) => ({ type: 'Group', id } as const)),
+                { type: 'Group', id: 'LIST' },
+              ]
+            : [{ type: 'Group', id: 'LIST' }]}
+    }),
+    createGroup: builder.mutation({
+      query: (unit: UpdateGroup) => ({credentials: 'include', url: `createGroup`, method: 'POST', body: unit}),
+      invalidatesTags: (result, error) => [{ type: 'Group', id: 'LIST' }],
+    }),
+
+    linkUnitGroup: builder.mutation({
+      query: ({
+        groupId,
+        unitId,
+      }: {groupId: number, unitId: number}) => {
+        return ({ 
+          credentials: 'include', 
+          url: `linkUnitGroup`, 
+          method: 'POST', 
+          body: 
+          {
+            group_id: groupId,
+            unit_id: unitId,
+          }
+        })},
+
+      invalidatesTags: (result, error, {unitId}) => [{ type: 'Unit', id: unitId }],
+    }),
+
+    unlinkUnitGroup: builder.mutation({
+      query: ({
+        groupId,
+        unitId,
+      }: {groupId: number, unitId: number}) => {
+        return ({ 
+          credentials: 'include', 
+          url: `unlinkUnitGroup`, 
+          method: 'POST', 
+          body: 
+          {
+            group_id: groupId,
+            unit_id: unitId,
+          }
+        })},
+
+      invalidatesTags: (result, error, {unitId}) => [{ type: 'Unit', id: unitId }],
+    }),
   }),
 })
 
@@ -119,7 +191,15 @@ export const {
   useFilterUnitsQuery, 
   useCreateUnitMutation, 
   useUpdateUnitMutation, 
-  useDeleteUnitMutation
+  useDeleteUnitMutation,
+
+  useCreateGroupMutation,
+  useFilterGroupsQuery,
+  useLinkUnitGroupMutation,
+  useUnlinkUnitGroupMutation,
+
+  useLazyFilterGroupsQuery,
+  useLazyFilterUnitsQuery,
  } = loyaBackendApi
 
 export default loyaBackendApi;
@@ -132,4 +212,6 @@ export const selectUnitById = createSelector(
   selectAllUnits,
   (state: any, unitId: any) => unitId,
   (units, unitId) => units.find((unit: any) => unit.id === unitId)
-);
+  );
+  
+// export const selectAllGroups = (state: RootState) => loyaBackendApi.endpoints.filterGroups.select(state.data.filterParams)(state)?.data?.result?.groups || emptyUsers;

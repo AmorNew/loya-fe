@@ -6,11 +6,20 @@ import ObjectListFilters from "./components/ObjectListFilters";
 import ObjectItem from "../ObjectItem";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { selectSearchParams, setCurrentObjectId } from "../../../app/reducers/dataReducer";
-import { useFilterUnitsQuery } from "../../../app/api/loyaBackendAPI";
+import { useFilterGroupsQuery, useFilterUnitsQuery } from "../../../app/api/loyaBackendAPI";
 import Button from "../../ui/Button";
 
 
-const ObjectList = ({hideOnlineStatus = false}: {hideOnlineStatus?: boolean}) => {
+type Props = {
+    hideOnlineStatus?: boolean
+    hideAddObjectButton?: boolean
+}
+
+const ObjectList = ({
+    hideOnlineStatus = false,
+    hideAddObjectButton = false,
+
+}: Props) => {
     const [search, setSearch] = useState<string>('');
 
     const searchParams = useAppSelector(selectSearchParams);
@@ -57,9 +66,9 @@ const ObjectList = ({hideOnlineStatus = false}: {hideOnlineStatus?: boolean}) =>
                 {content}           
             </div>
 
-            <div className={styles.buttonWrapper}>
+            {!hideAddObjectButton && <div className={styles.buttonWrapper}>
                 <Button onClick={() => navigate('/object/new')}>+ Добавить новый объект</Button>
-            </div>
+            </div>}
         </div>
     );
 }

@@ -6,7 +6,7 @@ import { type UnitId } from './collectionsReducer';
 
 export type SearchParams = {
   text?: string;
-  box?: {
+  box?: null | {
     left_top: {
       lat: number,
       lon: number,
@@ -25,14 +25,21 @@ export interface DataState {
     searchParams: SearchParams,
 }
 
-const initialState: DataState = {
+const initialState: () => DataState = () => {
+  // TODO: BS! Need refactoring!
+  const boxString = localStorage.getItem('box');
+  const box = boxString && document.location.pathname.includes('map') ? JSON.parse(boxString) : undefined;
+
+  return ({
     currentObjectId: undefined,
     currentObjectsIds: undefined,
     searchParams: {
       text: '',
+      box,
       order_by: 'visible_name',
       order_direction: 'asc',
     },
+  })
 };
 
 export const counterSlice = createSlice({

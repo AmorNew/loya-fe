@@ -13,6 +13,7 @@ import { iconTypes } from "../ObjectForm/components/IconSelector";
 import { isPointOnline, selectPointByObjectId } from "../../../app/reducers/pointsReducer";
 
 import styles from './ObjectListItem.module.scss';
+import { Group } from "../../../app/reducers/collectionsReducer";
 
 
 
@@ -37,7 +38,7 @@ const ObjectItem = ({objectId, markCurrent = true, hideOnlineStatus = false}: an
         }
     };
  
-    const {visible_name, icon, vehicle: {make, model}} = object;
+    const {visible_name, icon, vehicle: {make, model}, groups = []} = object;
 
     const iconProps = iconTypes[icon];
     
@@ -74,9 +75,11 @@ const ObjectItem = ({objectId, markCurrent = true, hideOnlineStatus = false}: an
             <div className={styles.wrapper}>
                 <div className={styles.wrapperRow}>
                     <div className={styles.model}>{visible_name}</div>
-                    <div className={styles.groups}>
-                        {[1,2,3].map((item, idx) => <div key={idx} className={cn(styles.group, styles[`group-${item}`])} />)}
-                    </div>
+                    {groups && <div className={styles.groups}>
+                        {groups.map(({id, type}: Group, idx: number) => (
+                            <div key={idx} className={cn(styles.circle, styles[`circle-${type}`])} />
+                        ))}
+                    </div>}
                 </div>
 
                 <div className={styles.wrapperRow}>

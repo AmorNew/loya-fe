@@ -1,5 +1,4 @@
-import React, {useState} from "react";
-import cn from 'classnames';
+import React from "react";
 
 import styles from './ObjectListFilters.module.scss';
 import { selectSearchParams, setSearchParams } from "../../../../../app/reducers/dataReducer";
@@ -30,16 +29,34 @@ const ObjectListFilters = () => {
     return (
         <div className={styles.root}>
             <div className={styles.filterButton}>
-                <Icon className={styles.filterIcon} type='filter' color='grey' />
+                <Icon 
+                    type='filter' 
+                    color='grey' 
+                    className={styles.filterIcon} 
+                />
             </div>
             
             <div className={styles.filterInputWrapper}>
-                <input type='text' className={styles.filterInput} placeholder="Поиск" onChange={e => handleSearchChange(e.target.value)} />
-                <Icon className={styles.searhIcon} type='search' color="grey" />
+                <input 
+                    type='text' 
+                    className={styles.filterInput} 
+                    placeholder="Поиск" 
+                    onChange={e => handleSearchChange(e.target.value)} 
+                />
+
+                <Icon 
+                    type='search' 
+                    color="grey" 
+                    className={styles.searhIcon} 
+                />
             </div>
             
             <div className={styles.sortButton} onClick={handleSearchSort}>
-                <Icon className={styles.sortIcon} type={`sort${order_direction?.toUpperCase() || 'ASC'}`} color='grey' />
+                <Icon 
+                    type={`sort${order_direction?.toUpperCase() || 'ASC'}`} 
+                    color='grey' 
+                    className={styles.sortIcon} 
+                />
             </div>
         </div>
     );

@@ -47,8 +47,6 @@ export const iconTypes: {[iconName: string]: IconProps} = {
 const IconSelector = ({value, onIconClick}: {value?: string, onIconClick: (name: string) => void}) => {
 
     const handleIconClick = (name: string) => {
-        console.log('name', name);
-
         onIconClick(name);
     }
 

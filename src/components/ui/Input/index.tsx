@@ -17,6 +17,8 @@ const Input = (props: any) => {
 
     const {
         onChange, 
+        onFocus,
+        onBlur,
         labelText, 
         className, 
         disabled = false, 
@@ -26,18 +28,23 @@ const Input = (props: any) => {
     } = props;
 
     return (
-        <label className={cn(styles.label, className, [styles[size]], {
-            [styles.focus]: focus, 
-            [styles.empty]: empty, 
-            [styles.disabled]: disabled,
-            [styles.error]: error,
-            [styles.hidden]: Boolean(props.type === 'hidden')
-        })}>
+        <label className={cn(
+            className, 
+            styles.label, 
+            [styles[size]], 
+            {
+                [styles.focus]: focus, 
+                [styles.empty]: empty, 
+                [styles.disabled]: disabled,
+                [styles.error]: error,
+                [styles.hidden]: Boolean(props.type === 'hidden')
+            }
+        )}>
             <p className={styles.labelText}>{labelText}</p>
             <input
-                onFocus={e => {setFocus(true);}}
-                onBlur={e => {setFocus(false);}}
-                onChange={e => {onChange(e.target.value, e); setEmpty(Boolean(!e.target.value.length))}}
+                onFocus={e => {onFocus && onFocus(e); setFocus(true);}}
+                onBlur={e => {onBlur && onBlur(e); setFocus(false);}}
+                onChange={e => {onChange && onChange(e.target.value, e); setEmpty(Boolean(!e.target.value.length))}}
                 className={styles.input}
                 disabled={disabled}
                 {...restProps} 

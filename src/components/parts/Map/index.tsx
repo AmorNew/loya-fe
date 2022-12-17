@@ -63,6 +63,17 @@ const MapActions = () => {
     },
   });
 
+  useEffect(() => {
+    const boxString = localStorage.getItem('box');
+    const box = boxString ? JSON.parse(boxString) : undefined;
+
+    dispatch(setSearchParams({box}));
+
+    return () => {
+      dispatch(setSearchParams({box: null}));
+    }
+  });
+
   return null
 };
 

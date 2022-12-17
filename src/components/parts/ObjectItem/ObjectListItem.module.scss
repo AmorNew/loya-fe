@@ -140,24 +140,31 @@
     flex-direction: row-reverse;
 }
 
-
-.group {
+.circle {
     width: 8px;
     height: 8px;
     border-radius: 50%;
     margin-left: -2px;
-}
-
-.group-1 {
     background: #FDCA4C;
-}
 
-.group-2 {
-    background: #10B981;
-}
-
-.group-3 {
-    background: #6366F1;
+    &.circle-0 {
+        background: #1B1F26;
+    }
+    &.circle-1 {
+        background: #155E75;
+    }
+    &.circle-2 {
+        background: #6366F1;
+    }
+    &.circle-3 {
+        background: #06B6D4;
+    }
+    &.circle-4 {
+        background: #10B981;
+    }
+    &.circle-5 {
+        background: #FDCA4C;
+    }
 }
 
 .lastActive {

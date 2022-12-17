@@ -14,6 +14,9 @@ import { ReactComponent as SearchIcon } from './icons/search.svg';
 import { ReactComponent as FilterIcon } from './icons/filter.svg';
 import { ReactComponent as SortASCIcon } from './icons/sort_ASC.svg';
 import { ReactComponent as SortDESCIcon } from './icons/sort_DESC.svg';
+import { ReactComponent as CrossIcon } from './icons/cross.svg';
+import { ReactComponent as ArrowUpIcon } from './icons/arrow-up.svg';
+import { ReactComponent as ArrowDownIcon } from './icons/arrow-down.svg';
 
 import styles from './Icon.module.scss';
 
@@ -56,6 +59,12 @@ const IconSVG = ({type}: any): any => {
             return <SortASCIcon />;
         case 'sortDESC':
             return <SortDESCIcon />;
+        case 'cross':
+            return <CrossIcon />;
+        case 'arrow-up':
+            return <ArrowUpIcon />;
+        case 'arrow-down':
+            return <ArrowDownIcon />;
     }
 }
 
