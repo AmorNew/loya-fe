@@ -86,7 +86,7 @@ export default function LoginPage() {
     return ory
       .submitSelfServiceLoginFlow(String(flow?.id), {...values, method: 'password'})
       .then(({data}) => {
-        console.log('login data', data);
+        // console.log('login data', data);
         
         dispatch(setIdentity(data.session.identity));
 

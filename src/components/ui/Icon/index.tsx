@@ -17,6 +17,10 @@ import { ReactComponent as SortDESCIcon } from './icons/sort_DESC.svg';
 import { ReactComponent as CrossIcon } from './icons/cross.svg';
 import { ReactComponent as ArrowUpIcon } from './icons/arrow-up.svg';
 import { ReactComponent as ArrowDownIcon } from './icons/arrow-down.svg';
+import { ReactComponent as EngineIcon } from './icons/engine.svg';
+import { ReactComponent as MileageIcon } from './icons/mileage.svg';
+import { ReactComponent as TimerIcon } from './icons/timer.svg';
+import { ReactComponent as TransmissionIcon } from './icons/transmission.svg';
 
 import styles from './Icon.module.scss';
 
@@ -25,13 +29,40 @@ export type IconColor = 'black' | 'breeze' | 'purple' | 'cyan' | 'green' | 'whit
 
 type Props = {
     className?: string, 
-    type: string, 
+    type: IconType, 
     color?: IconColor,
     size?: 's' | 'm' | 'l', 
     onClick?: () => void
 };
 
-const IconSVG = ({type}: any): any => {
+export type IconType = 
+    | 'truck'
+    | 'exit'
+    | 'maps'
+    | 'edit'
+    | 'delete'
+    | 'location'
+    | 'exclamation'
+    | 'car'
+    | 'roadhelp'
+    | 'search'
+    | 'filter'
+    | 'sort'
+    | 'sort'
+    | 'cross'
+    | 'arrow'
+    | 'arrow'
+    | 'engine'
+    | 'mileage'
+    | 'timer'
+    | 'transmission'
+    | 'sortASC'
+    | 'sortDESC'
+    | 'arrow-up'
+    | 'arrow-down'
+;
+
+const IconSVG = ({type}: {type: IconType}): any => {
     switch(type) {
         case 'truck':
             return <TruckIcon />;
@@ -65,6 +96,14 @@ const IconSVG = ({type}: any): any => {
             return <ArrowUpIcon />;
         case 'arrow-down':
             return <ArrowDownIcon />;
+        case 'engine':
+            return <EngineIcon />;
+        case 'mileage':
+            return <MileageIcon />;
+        case 'timer':
+            return <TimerIcon />;
+        case 'transmission':
+            return <TransmissionIcon />;
     }
 }
 

@@ -18,8 +18,6 @@ const SideBar = () => {
     const currentObjectId = location.pathname.split('/')[2];
     
     const onLogoutClick = () => {
-        console.log('exit'); 
-        
         ory
             .createSelfServiceLogoutFlowUrlForBrowsers()
             .then(({data}) => {

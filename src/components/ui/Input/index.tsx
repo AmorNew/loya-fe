@@ -69,10 +69,10 @@ const Input = (props: any) => {
                 //     //  setFocus(true);
                 // }}
                 onBlur={e => {
-                    console.log('---');
-                    console.log('onBlur');
-                    console.log('e.target.selectionStart', e.target.selectionStart);
-                    console.log('e.target.selectionEnd', e.target.selectionEnd);
+                    // console.log('---');
+                    // console.log('onBlur');
+                    // console.log('e.target.selectionStart', e.target.selectionStart);
+                    // console.log('e.target.selectionEnd', e.target.selectionEnd);
                     
                     
 

@@ -1,0 +1,12 @@
+.root {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-content: center;
+    align-items: stretch;
+    justify-content: flex-start;
+    
+    gap: 24px;
+
+    overflow: auto;
+}

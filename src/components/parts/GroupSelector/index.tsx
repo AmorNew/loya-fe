@@ -64,13 +64,8 @@ export const GroupSelector = ({
 
     const promiseOptions = (inputValue: string) => 
         new Promise<Option[]>((resolve) => {
-            console.log('THIS');
-
             trigger({text: inputValue})
                 .then(res => {
-
-                    console.log('value', value);
-
                     const options = res.data.result.groups.reduce((acc: Option[], {
                         id,
                         name,
@@ -237,18 +232,14 @@ export const GroupSelector = ({
                 formatCreateLabel={inputValue => <div>{`Создать группу "${inputValue}"`}</div>}
                 classNames={{
                     container: () => filter ? undefined : styles.container,
-                    control: (state) => {
-                        
-                        console.log('state', state);
-
-                        return cn(
+                    control: (state) => cn(
                         styles.control,
                         {
                             [styles.focused]: state.isFocused,
                             [styles.filter]: filter,
                             [styles.selected]: filter && state.hasValue,
                         }
-                    )},
+                    ),
                     indicatorsContainer: () => filter ? styles.filterIndicators : styles.indicators,
                     clearIndicator: () => filter ? styles.hiddenIndicator : styles.indicator, 
                     dropdownIndicator: () => filter ? styles.filterDropdownIndicator : styles.indicator,

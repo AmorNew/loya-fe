@@ -9,6 +9,13 @@ import { setPoints } from '../reducers/pointsReducer';
 import { counterSlice, SearchParams, selectSearchParams } from '../reducers/dataReducer';
 
 
+export interface Event {
+  category: string,
+  severity: string,
+  created_at: string,
+  description: string,
+};
+
 export const loyaBackendApi = createApi({
   reducerPath: 'loyaBackendApi',
   baseQuery: fetchBaseQuery({ 
@@ -275,7 +282,7 @@ export const {
 
   useFilterUnitHistoryQuery,
   useLazyFilterUnitHistoryQuery,
- } = loyaBackendApi
+} = loyaBackendApi
 
 export default loyaBackendApi;
 

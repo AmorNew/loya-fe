@@ -8,7 +8,7 @@ import { UnitId } from '../../../app/reducers/collectionsReducer';
 import { useAppSelector } from '../../../app/hooks';
 import { LatLngExpression } from 'leaflet';
 import { isPointOnline, selectPointByObjectId } from '../../../app/reducers/pointsReducer';
-import Icon, { IconColor } from '../../ui/Icon';
+import Icon, { IconColor, IconType } from '../../ui/Icon';
 import { iconTypes } from '../ObjectForm/components/IconSelector';
 
 import styles from './DriftMarker.module.scss'
@@ -22,7 +22,7 @@ const CustomMarker = ({
     speed,
     isOnline,
 }: {
-    iconType: string, 
+    iconType: IconType, 
     color: IconColor, 
     name: string,
     course: number,

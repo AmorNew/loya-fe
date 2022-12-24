@@ -42,12 +42,12 @@ const SelectInput = (props: any) => {
 
     const onBlur = () => {
         setValue('text')
-        console.log('blur');
+        // console.log('blur');
         setShow(false);
     }; 
 
     const onFocus= () => {
-        console.log('focus');
+        // console.log('focus');
         setShow(true);
     }
 

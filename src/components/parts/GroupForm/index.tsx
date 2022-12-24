@@ -44,8 +44,6 @@ const GroupForm = ({newGroupName = '', onSubmit}: Props) => {
             type,
         })
             .then((res: any) => {
-                console.log(res);
-
                 if (onSubmit) {
                     onSubmit({
                         id: res?.data?.result?.id,
@@ -113,8 +111,6 @@ const GroupForm = ({newGroupName = '', onSubmit}: Props) => {
                     }}  
                     defaultValue={{ type: 0, value: 'ocean', label: '' }}   
                     onChange={(value) => {
-                        console.log(value);
-
                         if (value) {
                             setType(value.type);
                         }

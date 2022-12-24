@@ -1,0 +1,73 @@
+.react-datepicker {
+    /* System BG / White */
+
+    background: #FFFFFF;
+    /* Shadow / Level 2 BYO 5-3-20 */
+
+    box-shadow: 0px 3px 5px rgba(85, 94, 112, 0.2), 0px 0px 1px rgba(85, 94, 112, 0.3);
+    border-radius: 4px;
+
+    /* Body 2 */
+
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 400;
+    border: none;
+}
+
+.react-datepicker__day--outside-month {
+    opacity: 0.5;
+}
+
+.react-datepicker__day--weekend {
+    color: #EF4444;
+}
+
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__day--in-range {
+    border-radius: 4px;
+    background-color: #929BAD;;
+}
+
+.react-datepicker__day--selected:hover, 
+.react-datepicker__day--in-selecting-range:hover, 
+.react-datepicker__day--in-range:hover, 
+.react-datepicker__month-text--selected:hover, 
+.react-datepicker__month-text--in-selecting-range:hover, 
+.react-datepicker__month-text--in-range:hover, 
+.react-datepicker__quarter-text--selected:hover, 
+.react-datepicker__quarter-text--in-selecting-range:hover, 
+.react-datepicker__quarter-text--in-range:hover, 
+.react-datepicker__year-text--selected:hover, 
+.react-datepicker__year-text--in-selecting-range:hover, 
+.react-datepicker__year-text--in-range:hover {
+    background-color: #555E70;
+}
+
+.react-datepicker__day--in-selecting-range:not(.react-datepicker__day--in-range, .react-datepicker__month-text--in-range, .react-datepicker__quarter-text--in-range, .react-datepicker__year-text--in-range) {
+    background-color: #BCC1CC;
+}
+
+.react-datepicker__header {
+    text-align: center;
+    background-color: #F1F5F9;
+    
+    border-bottom: none;
+    border-top-left-radius: 0.3rem;
+    padding: 8px 0;
+    position: relative;
+}
+
+
+.react-datepicker-popper[data-placement^=bottom] .react-datepicker__triangle::before {
+    border-bottom-color: transparent;
+}
+
+.react-datepicker-popper[data-placement^=bottom] .react-datepicker__triangle::before, .react-datepicker-popper[data-placement^=bottom] .react-datepicker__triangle::after {
+    border-bottom-color: transparent;
+}
+
+.react-datepicker__tab-loop {
+    position: absolute;
+    top: 0;
+  }

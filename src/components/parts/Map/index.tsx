@@ -39,8 +39,6 @@ const MapActions = () => {
       const bounds = map.getBounds();
       const zoom = map.getZoom();
 
-      console.log('zoom', zoom);
-
       const northWest = bounds.getNorthWest();
       const southEast = bounds.getSouthEast();
 

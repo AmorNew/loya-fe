@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import styles from './ObjectListFilters.module.scss';
 import { selectSearchParams, setSearchParams } from "../../../../../app/reducers/dataReducer";
 import { useAppDispatch, useAppSelector } from "../../../../../app/hooks";
-import Icon from "../../../../ui/Icon";
+import Icon, { IconType } from "../../../../ui/Icon";
 import GroupSelector from "../../../GroupSelector";
 import { selectAllGroups } from "../../../../../app/api/loyaBackendAPI";
 // import Modal from "../../../Modal";
 
+
+const getIconTypeForOrderDirection = (order_direction: string): IconType => `sort${order_direction?.toUpperCase()}` as IconType;
 
 const ObjectListFilters = () => {
     const searchParams = useAppSelector(selectSearchParams);
@@ -58,7 +60,7 @@ const ObjectListFilters = () => {
             
             <div className={styles.sortButton} onClick={handleSearchSort}>
                 <Icon 
-                    type={`sort${order_direction?.toUpperCase() || 'ASC'}`} 
+                    type={getIconTypeForOrderDirection(order_direction || 'asc')} 
                     color='grey' 
                     className={styles.sortIcon} 
                 />
