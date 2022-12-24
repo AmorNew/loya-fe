@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import cn from 'classnames';
-import AsyncSelect from 'react-select/async-creatable';
-import Select from 'react-select';
+import AsyncSelectCreatable from 'react-select/async-creatable';
+import AsyncSelect from 'react-select/async';
+import { ActionMeta, MultiValue, components as selecComponents } from 'react-select';
 
 import { Group } from "../../../app/reducers/collectionsReducer";
-import { useLazyFilterGroupsQuery } from "../../../app/api/loyaBackendAPI";
+import { useLazyFilterGroupsQuery, useLinkUnitGroupMutation, useUnlinkUnitGroupMutation } from "../../../app/api/loyaBackendAPI";
 
 import Modal from "../Modal";
-import Button from "../../ui/Button";
-import Input from "../../ui/Input";
+import GroupForm from "../GroupForm";
 
 import styles from './GroupSelector.module.scss';
-import GroupForm from "../GroupForm";
+import Icon from "../../ui/Icon";
 
 
 export interface Option {
@@ -20,12 +20,27 @@ export interface Option {
     readonly type: number;
     readonly isFixed?: boolean;
     readonly isDisabled?: boolean;
-  }
+}
 
-export const GroupSelector = ({object = {}, onChange}: {object?: any, onChange: (value: number[]) => void}) => {
+type Props = {
+    object?: any, 
+    creatable?: boolean,
+    filter?: boolean,
+    ControlComponent?: React.Component,
+    onChange?: (value: number[]) => void,
+};
+
+export const GroupSelector = ({
+    object = {}, 
+    creatable = true,
+    filter = false,
+    onChange
+}: Props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
-    const [cacheOptions, setCacheOptions] = useState<string>('');
+    
+    const [newGroupName, setNewGroupName] = useState<string>('');
+    const [options, setOptions] = useState<Option[]>([]);
     const [value, setValue] = useState<Option[]>(object.groups?.map(({
         id,
         name,
@@ -40,16 +55,22 @@ export const GroupSelector = ({object = {}, onChange}: {object?: any, onChange: 
 
         return option;
 
-    }));
-    
-    const [newGroupName, setNewGroupName] = useState<string>('');
+    }) || []);
     
     const [trigger, result, lastPromiseInfo] = useLazyFilterGroupsQuery();
 
+    const [linkTrigger, linkResult] = useLinkUnitGroupMutation();
+    const [unlinkTrigger, unlinkResult] = useUnlinkUnitGroupMutation();
+
     const promiseOptions = (inputValue: string) => 
         new Promise<Option[]>((resolve) => {
+            console.log('THIS');
+
             trigger({text: inputValue})
                 .then(res => {
+
+                    console.log('value', value);
+
                     const options = res.data.result.groups.reduce((acc: Option[], {
                         id,
                         name,
@@ -70,7 +91,7 @@ export const GroupSelector = ({object = {}, onChange}: {object?: any, onChange: 
                         return acc;
                     }, []);
 
-                    setCacheOptions('loaded');
+                    setOptions(options);
                     resolve(options);
                 });
         });
@@ -81,125 +102,190 @@ export const GroupSelector = ({object = {}, onChange}: {object?: any, onChange: 
         setShowModal(true);
     };
 
+    const handleChange = (newValue: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
+        switch(actionMeta.action) {
+            case "clear":
+                if (object && object.id) {
+                    value.forEach((option) => {
+                        unlinkTrigger({unitId: object.id, groupId: Number(option.value)})
+                    });
+                } 
+
+                setValue([]);
+                break;
+            case "select-option":
+                if (object && object.id && actionMeta.option?.value) {
+                    linkTrigger({unitId: object.id, groupId: Number(actionMeta.option?.value)});
+                } 
+
+                setValue((prevValue: any) => {
+                    return [...prevValue, actionMeta.option];
+                });
+                break;
+            case "deselect-option":
+                if (object && object.id && actionMeta.option?.value) {
+                    linkTrigger({unitId: object.id, groupId: Number(actionMeta.option?.value)});
+                } 
+
+                setValue((prevValue: any) => {
+                    return prevValue.reduce((acc: Option[], option: Option)=> {
+                        if (actionMeta?.option?.value !== option.value) {
+                            acc.push(option);
+                        }
+                        
+                        return acc;
+                    }, []);
+                });
+                break;
+            case "remove-value":
+                if (object && object.id && actionMeta.removedValue?.value) {
+                    unlinkTrigger({unitId: object.id, groupId: Number(actionMeta.removedValue?.value)});
+                } 
+
+                setValue((prevValue: any) => {
+                    return prevValue.reduce((acc: Option[], option: Option)=> {
+                        if (actionMeta.removedValue.value !== option.value) {
+                            acc.push(option);
+                        }
+                        
+                        return acc;
+                    }, []);
+                });
+                break;
+            // case "pop-value":
+            // case "create-option":
+        }
+
+        onChange && onChange(newValue.map(({value}) => value));
+    };
+
+    const handleModalClose = () => {
+        setIsLoading(false);
+        setShowModal(false);
+    };
+
+    const handleFormSubmit = (newGroup: any) => {
+        setIsLoading(false);
+        setShowModal(false);
+
+        setValue((prevValue: any) => {
+            const {
+                id,
+                name,
+                type,
+            } = newGroup;
+
+            const newOption = {
+                value: id,
+                label: name,
+                type,
+            };
+            
+            return [...prevValue, newOption];
+        });
+    };
+
+    const Select = creatable ? AsyncSelectCreatable : AsyncSelect;
+
+    let components;
+    const additionalProps: any = {};
+    
+    if (filter) {
+        const DropdownIndicator = (props: any) => {
+            return (
+                selecComponents.DropdownIndicator && (
+                <selecComponents.DropdownIndicator {...props}>
+                    <Icon 
+                        type='filter' 
+                        color='grey' 
+                        className={styles.filterIcon}
+                    />
+                </selecComponents.DropdownIndicator>
+                )
+            );
+        };
+
+        components = {
+            DropdownIndicator,
+        }
+
+        additionalProps.components = components;
+    }
+
     return (
         <>
-            <AsyncSelect
+            <Select
+                hideSelectedOptions={!filter}
+                
                 isMulti
+                isClearable
+                defaultOptions
+                cacheOptions
+                
+                value={value}
+                closeMenuOnSelect={false}
                 isDisabled={isLoading}
                 isLoading={isLoading}
+                onChange={handleChange}
                 onCreateOption={handleCreate}
-                isClearable
-                cacheOptions={cacheOptions}
-                defaultOptions
-                // defaultValue={defaultValue}
-                value={value}
+                options={options}
                 loadOptions={promiseOptions}
-                closeMenuOnSelect={false}
                 placeholder="Выберите группы"
+
+                noOptionsMessage={() => <div>Ничего не найдено</div>}
+                loadingMessage={() => <div>Загрузка...</div>}
+                formatCreateLabel={inputValue => <div>{`Создать группу "${inputValue}"`}</div>}
                 classNames={{
-                    container: () => {
-                        return cn({
-                            [styles.container]: true,
-                        });
-                    },
-                    control: (state) =>
-                        cn({
-                            [styles.control]: true,
+                    container: () => filter ? undefined : styles.container,
+                    control: (state) => {
+                        
+                        console.log('state', state);
+
+                        return cn(
+                        styles.control,
+                        {
                             [styles.focused]: state.isFocused,
-                        }),
-
-                    indicatorsContainer: () => {
-                        return cn({
-                            [styles.indicators]: true,
-                        });
-                    },
-                    clearIndicator: () => {
-                        return cn({
-                            [styles.indicator]: true,
-                        });
-                    }, 
-                    dropdownIndicator: () => {
-                        return cn({
-                            [styles.indicator]: true,
-                        });
-                    },
-                    valueContainer: () => styles.valueContainer,
+                            [styles.filter]: filter,
+                            [styles.selected]: filter && state.hasValue,
+                        }
+                    )},
+                    indicatorsContainer: () => filter ? styles.filterIndicators : styles.indicators,
+                    clearIndicator: () => filter ? styles.hiddenIndicator : styles.indicator, 
+                    dropdownIndicator: () => filter ? styles.filterDropdownIndicator : styles.indicator,
+                    indicatorSeparator: () => filter ? styles.hiddenIndicator : undefined,
+                    valueContainer: () => filter ? styles.hiddenValueContainer : styles.valueContainer,
                     placeholder: () => styles.placeholder,
-
-                    multiValue: (props) => {
-                        return cn({
+                    multiValue: (props: any) => cn(
+                        styles.multiValue, 
+                        {
                             [styles[`type-${props.data.type}`]]: true,
-                            [styles.multiValue]: true,
-                        });
-                    },
+                        }
+                    ),
                     multiValueRemove: () => styles.remove,
+                    option: (props: any) => cn(
+                        styles.option, 
+                        {
+                            [styles.selected]: props.isSelected,
+                            [styles.focused]: props.isFocused,
+                            [styles[`type-${props.data.type}`]]: true,
+                        }
+                    ),
+                    menu: () => filter ? styles.menu : undefined,
+                    menuList: () => filter ? styles.menuList : undefined,
                 }}
-                onChange={(newValue, meta) => {
-                    switch(meta.action) {
-                        case "clear":
-                            setValue([]);
-                            break;
-                        case "select-option":
-                            setValue((prevValue: any) => {
-                                console.log('prevValue', prevValue);
-                                
-                                return [...prevValue, meta.option];
-                            });
-                            break;
-                        // case "deselect-option":
-                        case "remove-value":
-                            setValue((prevValue: any) => {
-                                console.log('prevValue', prevValue);
-                                
-                                return prevValue.reduce((acc: Option[], option: Option)=> {
-                                    if (meta.removedValue.value !== option.value) {
-                                        acc.push(option);
-                                    }
-                                    
-                                    return acc;
-                                }, []);
-                            });
-                            break;
-                        // case "pop-value":
-                        // case "create-option":
-                    }
-    
-                    const value = newValue.map(({value}) => value);
 
-                    onChange(value);
-                }}
-                
+                {...additionalProps}
             />
 
-            <Modal show={showModal} onClose={() => {
-                setIsLoading(false);
-                setShowModal(false);
-            }}>
+            {creatable && <Modal 
+                show={showModal} 
+                onClose={handleModalClose}
+            >
                 <GroupForm 
                     newGroupName={newGroupName} 
-                    onSubmit={(newGroup) => {
-                        setIsLoading(false);
-                        setShowModal(false);
-                        setCacheOptions('created');
-
-                        setValue((prevValue: any) => {
-                            const {
-                                id,
-                                name,
-                                type,
-                            } = newGroup;
-
-                            const newOption = {
-                                value: id,
-                                label: name,
-                                type,
-                            };
-                            
-                            return [...prevValue, newOption];
-                        });
-                    }}    
+                    onSubmit={handleFormSubmit}    
                 />
-            </Modal>
+            </Modal>}
         </>
     );
 };

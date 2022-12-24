@@ -107,6 +107,7 @@ const GroupForm = ({newGroupName = '', onSubmit}: Props) => {
                             return cn({
                                 [styles[`type-${props.data.type}`]]: true,
                                 [styles.option]: true,
+                                [styles.focused]: props.isFocused,
                             });
                         },
                     }}  
@@ -131,7 +132,7 @@ const GroupForm = ({newGroupName = '', onSubmit}: Props) => {
                 <Input 
                     size="s"
                     className={styles.input}
-                    value={groupName} 
+                    defaultValue={groupName} 
                     onChange={(value: string) => {setGroupName(value);}}
                 />
             </div>

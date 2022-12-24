@@ -42,16 +42,16 @@ export class PositionClient {
   methodDescriptorStreaming = new grpcWeb.MethodDescriptor(
     '/position.Position/Streaming',
     grpcWeb.MethodType.SERVER_STREAMING,
-    position_pb.Unit,
+    position_pb.PositionReq,
     position_pb.Point,
-    (request: position_pb.Unit) => {
+    (request: position_pb.PositionReq) => {
       return request.serializeBinary();
     },
     position_pb.Point.deserializeBinary
   );
 
   streaming(
-    request: position_pb.Unit,
+    request: position_pb.PositionReq,
     metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<position_pb.Point> {
     return this.client_.serverStreaming(
       this.hostname_ +

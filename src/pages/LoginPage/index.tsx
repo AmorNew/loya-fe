@@ -6,6 +6,7 @@ import cn from 'classnames';
 import {
   SelfServiceLoginFlow,
   SubmitSelfServiceLoginFlowBody,
+  UiNodeInputAttributes,
 } from "@ory/client"
 
 import { getNodeId } from "@ory/integrations/ui"
@@ -133,10 +134,12 @@ export default function LoginPage() {
                 key={`${id}-${i}`} 
                 labelText={node.meta?.label?.text} 
                 {...node.attributes} 
-                value={values[id as any] || ''}
-                onChange={(value: any, e: any) => {
+                defaultValue={values[id as any] || ''}
+                onChange={(value: any) => {
                   return setValues((prevState: any) => {
-                    return ({...prevState, [e.target.name]: value});
+                    const {name = ""} = node.attributes as UiNodeInputAttributes;
+
+                    return ({...prevState, [name]: value});
                   })
                 }} 
               /> 

@@ -11,7 +11,6 @@
     border-radius: 4px;
     margin: 8px 0;
     
-    
     cursor: text;
 
     padding: 7px 8px;
@@ -21,7 +20,20 @@
         padding: 5px 8px;
     }
 
-    &.focus {
+    &.l {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: flex-start;
+
+        &.hidden {
+            display: none;
+        }
+    }
+
+    &:focus-within {
         border: 1px solid #155E75;
     }
 
@@ -91,18 +103,19 @@
         opacity: 0;
 
         position: absolute;
-    }
-
-
-    .s.empty & {
-        position: inherit;
         
-        opacity: 1;
+        top: -26px;
     }
 
-    .s.focus & {
-        position: absolute;
-    }
+    // .s.empty & {
+    //     position: absolute;
+        
+    //     opacity: 1;
+    // }
+
+    // .s.focus & {
+    //     position: absolute;
+    // }
 }
 
 .focus .labelText {
@@ -127,11 +140,16 @@
 
     height: 20px;
 
-    .empty & {
+    &[value=""] {
         height: 0;
+
+        & + p {        
+            top: 6px;
+            opacity: 1;
+        }
     }
 
-    .focus & {
+    &:focus {
         height: 20px;
     }
 
@@ -168,7 +186,9 @@
     }
 }
 
-.input:focus, .input:focus-visible, .input:focus-within {
+.input:focus, 
+.input:focus-visible, 
+.input:focus-within {
     outline: none !important;
 }
 

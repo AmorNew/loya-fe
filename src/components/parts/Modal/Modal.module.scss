@@ -13,15 +13,17 @@
     flex-direction: row;
     z-index: 10000000;
 
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(4px);
+    &.paranja {
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(4px);
 
-    cursor: pointer;
+        cursor: pointer;
+    }
 }
 
 .content {
-    width: 500px;
-    height: 500px;
+    width: auto;
+    height: auto;
     background-color: white;
 
     display: flex;
@@ -29,7 +31,7 @@
     align-items: flex-start;
     padding: 24px;
     background: #FFFFFF;
-    box-shadow: 0px 0px 3px rgb(135 140 158 / 3%), 0px 4px 8px rgb(135 140 158 / 8%);
+    box-shadow: 0px 8px 12px rgba(85, 94, 112, 0.15), 0px 0px 1px rgba(85, 94, 112, 0.3);
     border-radius: 4px;
     box-sizing: border-box;
 

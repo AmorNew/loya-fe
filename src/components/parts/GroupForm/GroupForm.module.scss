@@ -178,13 +178,19 @@ div.option {
 
     gap: 8px;
 
+    cursor: pointer;
+
+    &.focused {
+        background-color: #E9EBF0;
+    }
+
     &:before {
         display: block;
         content: '';
         width: 12px;
         height: 12px;
         border-radius: 50%;
-        background: #1B1F26;
+        background: transparent;
     }
 
     &.type-0:before {

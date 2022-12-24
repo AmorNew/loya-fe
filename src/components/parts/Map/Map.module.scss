@@ -4,3 +4,69 @@
     flex-grow: 1;
 }
 
+.clusterWrapper {
+    background: none !important;
+    border: none !important;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.cluster {
+    display: flex;
+    border-radius: 50%;
+    background-color: #155E75;
+    /* System Graph / Line Gray */
+
+    border: 3px solid white;
+    box-sizing: border-box;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15.7878px;
+    line-height: 16px;
+    /* identical to box height, or 100% */
+
+    text-align: center;
+
+    color: #FFFFFF;
+}
+
+.controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: auto;
+    background-color: white;
+    text-align: right;
+    z-index: 1000;
+
+    padding: 8px;
+
+    border: 2px solid rgba(0,0,0,0.2);
+    border-radius: 4px;
+
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.control {
+    cursor: pointer;
+}

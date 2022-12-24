@@ -34,6 +34,8 @@ export const loyaBackendApi = createApi({
       query: ({
         text = '',
         box, 
+        group_ids,
+        useCoordinates = true,
         order_by = "visible_name",
         order_direction = "asc",
     }) => {
@@ -45,7 +47,8 @@ export const loyaBackendApi = createApi({
           {
             filter: {
               text,
-              box,
+              group_ids,
+              box: useCoordinates ? box : undefined,
             },
             order_by,
             order_direction,
@@ -70,7 +73,6 @@ export const loyaBackendApi = createApi({
               speed,
               nsat,
               course,
-
               pdop: 0,
               hdop: 0,
               vdop: 0,
@@ -164,7 +166,6 @@ export const loyaBackendApi = createApi({
 
       invalidatesTags: (result, error, {unitId}) => [{ type: 'Unit', id: unitId }],
     }),
-
     unlinkUnitGroup: builder.mutation({
       query: ({
         groupId,
@@ -183,6 +184,77 @@ export const loyaBackendApi = createApi({
 
       invalidatesTags: (result, error, {unitId}) => [{ type: 'Unit', id: unitId }],
     }),
+
+    filterUnitHistory: builder.query({
+      query: ({
+        unit_id,
+        category,
+        created_from,
+        created_to,
+        order_by = "created_at",
+        order_direction = "asc",
+    }) => {
+      return ({ 
+        credentials: 'include', 
+        url: `filterUnitHistory`, 
+        method: 'POST', 
+        body: {
+          filter: {
+            unit_id,
+            category,
+            created_from,
+            created_to,
+          },
+          order_by,
+          order_direction,
+          limit: 100,
+          offset: 0
+        }
+      })},
+      // async onCacheEntryAdded(
+      //   arg,
+      //   { cacheDataLoaded, dispatch }
+      // ) {        
+      //   const {data} = await cacheDataLoaded;
+
+      //   // const points = data.result.units.reduce((acc: Point.AsObject[], {device: {hw_id}, position}: Unit): Point.AsObject[] => {
+      //   //   if (position) {
+      //   //     const {latitude, longitude, last_nav_data: {nsat, course, speed}, updated_at} = position;
+
+      //   //     let point: Point.AsObject  = {
+      //   //       deviceId: hw_id,
+      //   //       latitude,
+      //   //       longitude,
+      //   //       speed,
+      //   //       nsat,
+      //   //       course,
+      //   //       pdop: 0,
+      //   //       hdop: 0,
+      //   //       vdop: 0,
+      //   //       ns: 0,
+      //   //       liquidSensorsList: [],
+      //   //       anSensorsList: [],
+      //   //       navigationTime: updated_at,
+      //   //       receivingTime: updated_at,
+      //   //     }
+
+      //   //     acc.push(point);
+      //   //   }
+          
+      //   //   return acc;
+      //   // }, []);
+
+      //   // dispatch(setPoints(points));
+      // },
+      // providesTags: (result) =>
+      //   {
+      //     return result
+      //       ? [
+      //           ...result.result.units.map(({ id }: any) => ({ type: 'Unit', id } as const)),
+      //           { type: 'History', id: 'LIST' },
+      //         ]
+      //       : [{ type: 'History', id: 'LIST' }]}
+    }),
   }),
 })
 
@@ -200,6 +272,9 @@ export const {
 
   useLazyFilterGroupsQuery,
   useLazyFilterUnitsQuery,
+
+  useFilterUnitHistoryQuery,
+  useLazyFilterUnitHistoryQuery,
  } = loyaBackendApi
 
 export default loyaBackendApi;
@@ -212,6 +287,12 @@ export const selectUnitById = createSelector(
   selectAllUnits,
   (state: any, unitId: any) => unitId,
   (units, unitId) => units.find((unit: any) => unit.id === unitId)
-  );
-  
-// export const selectAllGroups = (state: RootState) => loyaBackendApi.endpoints.filterGroups.select(state.data.filterParams)(state)?.data?.result?.groups || emptyUsers;
+);
+
+
+
+export const selectAllGroups = (state: RootState) => loyaBackendApi.endpoints.filterGroups.select({
+  text: '', 
+  order_by: "name",
+  order_direction: "asc",
+})(state)?.data?.result?.groups || emptyUsers;

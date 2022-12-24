@@ -60,6 +60,9 @@ export const selectPointsBounds = (state: RootState): LatLngTuple[] => {
     return bounds;
 };
 
+export const selectPoints = (state: RootState): Point.AsObject[] | undefined => Object.values(state.points);
+
+
 export const isPointOnline = (point: Point.AsObject): boolean => {
   const {navigationTime} = point;
 

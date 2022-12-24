@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, useMapEvents, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, useMapEvents, useMap, Marker } from 'react-leaflet'
 import { LatLngExpression } from 'leaflet';
+import L from "leaflet";
 
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { Unit as UnitCollection, UnitId } from '../../../app/reducers/collectionsReducer';
@@ -9,13 +10,14 @@ import { selectCurrentObjectId, setSearchParams } from '../../../app/reducers/da
 import DriftMarker from '../DriftMarker';
 
 import { selectAllUnits, selectUnitById } from '../../../app/api/loyaBackendAPI';
-import { selectPointByObjectId } from '../../../app/reducers/pointsReducer';
+import { selectPointByObjectId, selectPoints } from '../../../app/reducers/pointsReducer';
 import { PositionClient } from '../../../schema/PositionServiceClientPb';
-import { Point, Unit } from '../../../schema/position_pb';
+import { Point, PositionReq } from '../../../schema/position_pb';
 import { Unit as UnitModel } from '../../../app/reducers/collectionsReducer';
 import { setPoint } from '../../../app/reducers/pointsReducer';
 
 import styles from './Map.module.scss';
+import useSupercluster from 'use-supercluster';
 
 
 const MapActions = () => {
@@ -37,6 +39,8 @@ const MapActions = () => {
       const bounds = map.getBounds();
       const zoom = map.getZoom();
 
+      console.log('zoom', zoom);
+
       const northWest = bounds.getNorthWest();
       const southEast = bounds.getSouthEast();
 
@@ -54,7 +58,7 @@ const MapActions = () => {
       if (!currentObjectPoint) {
         timerId = setTimeout(() => {
           dispatch(setSearchParams({box}));
-        }, 1500);
+        }, 300);
       }
 
       localStorage.setItem('center', JSON.stringify(center));
@@ -77,7 +81,25 @@ const MapActions = () => {
   return null
 };
 
-const Markers = () => {
+
+const icons: any = {};
+const fetchIcon = (count: number, size: number) => {
+  if (!icons[count]) {
+    icons[count] = L.divIcon({
+      html: `<div class="${styles.cluster}" style="width: ${size}px; height: ${size}px;">
+        ${count}
+      </div>`,
+      className: styles.clusterWrapper,
+    });
+  }
+  return icons[count];
+};
+
+type MarkersProps = {
+  useClusters: boolean,
+};
+
+const Markers = ({useClusters}: MarkersProps) => {
   const map = useMap();
 
   const navigate = useNavigate();
@@ -88,6 +110,36 @@ const Markers = () => {
   const currentObjectId = useAppSelector(selectCurrentObjectId);
   const currentObject = useAppSelector(state => selectUnitById(state, currentObjectId));
   const currentObjectPoint = useAppSelector(state => selectPointByObjectId(state, currentObject?.device?.hw_id))
+  
+  const points = useAppSelector(selectPoints)?.map(point => ({
+    type: "Feature",
+    properties: { cluster: false, pointId: point.deviceId },
+    geometry: {
+      type: "Point",
+      coordinates: [
+        point.longitude,
+        point.latitude
+      ]
+    }
+  }));
+
+  const objectsMap: any = {};
+
+  currentObjects.forEach(({id, icon, visible_name, device: {hw_id}}: UnitCollection) => {
+    objectsMap[hw_id] = {id, icon, visible_name}
+  });
+
+  const { clusters } = useSupercluster({
+    points: points || [],
+    bounds: [
+      map.getBounds().getSouthWest().lng,
+      map.getBounds().getSouthWest().lat,
+      map.getBounds().getNorthEast().lng,
+      map.getBounds().getNorthEast().lat
+    ],
+    zoom: map.getZoom(),
+    options: { radius: 60, maxZoom: 18 }
+  });
 
   useEffect(() => {
       let stream: any = undefined;
@@ -98,31 +150,25 @@ const Markers = () => {
         const currentObject = currentObjects.find(({id}: UnitModel) => id === currentObjectId);
         
         if (currentObject) {
-          const request = new Unit();
+          const request = new PositionReq();
 
-          request.setObjectIdsList([currentObject.device.hw_id]);    
+          request.setUnitIdsList([currentObject.device.hw_id]);    
           
           stream = client.streaming(request);
 
           stream.on('data', (point: Point) => {
             dispatch(setPoint(point.toObject()));
-
-            // console.log('-----------------------');
-            // console.log('point', point.toObject());
           });
         }
 
       } else if (currentObjects) {
-        const request = new Unit();
-        request.setObjectIdsList(currentObjects.map(({device: {hw_id}}: any) => hw_id));    
+        const request = new PositionReq();
+        request.setUnitIdsList(currentObjects.map(({device: {hw_id}}: any) => hw_id));    
         
         stream = client.streaming(request);
 
         stream.on('data', (point: Point) => {
           dispatch(setPoint(point.toObject()));
-
-          // console.log('-----------------------');
-          // console.log('point', point.toObject());
         });
       }
 
@@ -155,31 +201,95 @@ const Markers = () => {
     return null
   }
 
+  if (currentObjectId && currentObject) {
+    return (
+      <DriftMarker 
+        objectId={currentObject.id}
+        hwId={Number(currentObject.device.hw_id)}
+        iconName={currentObject.icon}
+        name={currentObject.visible_name}
+        onClick={setCurrent}
+      />
+    );
+  }
+
+  if (useClusters) {
+    return (
+      <>
+        {clusters.map(cluster => {
+              const [longitude, latitude] = cluster.geometry.coordinates;
+              
+              const {
+                cluster: isCluster,
+                point_count: pointCount,
+                pointId,
+              } = cluster.properties;
+
+              if (isCluster) {
+                return (
+                  <Marker
+                    key={`cluster-${cluster.id}`}
+                    position={[latitude, longitude]}
+                    icon={fetchIcon(
+                      pointCount,
+                      30 + (pointCount / (points?.length || 1)) * 10
+                    )}
+                  />
+                );
+              }
+
+              const object = objectsMap[pointId];
+              
+              if (!object) {
+                return null;
+              }
+
+              return (
+                <DriftMarker 
+                  key={`${object.id}_${pointId}`} 
+                  objectId={object.id}
+                  hwId={Number(pointId)}
+                  iconName={object.icon}
+                  name={object.visible_name}
+                  onClick={setCurrent}
+                />
+              );
+        })}
+      </>
+    );
+  }
+
   return (
     <>
       {currentObjects.map(({id, icon, visible_name, device: {hw_id}}: UnitCollection) => {
-          if (currentObjectId && currentObjectId !== id) {
-              return null;
-          }
-
-          return (
-              <DriftMarker 
-                  key={`${id}_${hw_id}`} 
-                  objectId={id}
-                  hwId={Number(hw_id)}
-                  iconName={icon}
-                  name={visible_name}
-                  onClick={setCurrent}
-              />
-          )
+        return (
+            <DriftMarker 
+                key={`${id}_${hw_id}`} 
+                objectId={id}
+                hwId={Number(hw_id)}
+                iconName={icon}
+                name={visible_name}
+                onClick={setCurrent}
+            />
+        )
       })}
     </>
   );
 }
 
 export default function Map() {
+  const [useClusters, setUseClusters] = useState<boolean>(true)
+  const [useCoordinates, setUseCoordinates] = useState<boolean>(true)
+
   const [center] = useState<LatLngExpression | undefined>(JSON.parse(localStorage.getItem('center') || '[55.7522, 37.6156]'));
   const [zoom] = useState<number>(Number(JSON.parse(localStorage.getItem('zoom') || '6')));
+
+  const dispatch = useAppDispatch();
+
+  const handleCoordinatesSwitch = () => {
+    setUseCoordinates(!useCoordinates);
+    dispatch(setSearchParams({useCoordinates: !useCoordinates}));
+  }
 
   return(
     <div className={styles.map}>
@@ -193,8 +303,24 @@ export default function Map() {
           <MapActions />
 
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          
-          <Markers />
+            
+            <div className={styles.controls}>
+              <div 
+                className={styles.control}  
+                onClick={() => {setUseClusters(!useClusters)}}
+              >
+                {useClusters ? 'Выключить кластеризацию' : 'Включить кластеризацию'}
+              </div>
+
+              <div 
+                className={styles.control}  
+                onClick={handleCoordinatesSwitch}
+              >
+                {useCoordinates ? 'Выключить поиск по координатам' : 'Включить поиск по координатам'}
+              </div>
+            </div>
+
+            <Markers useClusters={useClusters} />
         </MapContainer>
     </div>
   );

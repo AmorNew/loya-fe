@@ -14,60 +14,90 @@ import IconSelector from "./components/IconSelector";
 import SelectInput from "../../ui/SelectInput";
 
 import styles from './ObjectForm.module.scss';
-import { Group } from "../../../app/reducers/collectionsReducer";
+import { Group, UpdateUnit } from "../../../app/reducers/collectionsReducer";
 import { StylesConfig } from "react-select";
 import GroupSelector from "../GroupSelector";
+import { createDefaultMaskGenerator, DEFAULT_MASK_RULES } from "react-hook-mask";
 
 
 type Props = {
     mode?: 'new' | 'edit'
 }
 
+const MY_RULES = new Map([
+    ['C', /[АВЕКМНОРСТУХABCKMHOPCTYX]/i],
+    ['N', /\d/],
+]);
+
 const formSchema = [
     {rowName: 'Название', props: {labelText: 'Название', name: "visible_name"}},
     {rowName: 'Стиль иконки', props: {labelText: 'Стиль иконки', name: "icon"}},
     {rowName: 'Марка', props: {labelText: 'Марка', name: "make"}},
     {rowName: 'Модель', props: {labelText: 'Модель', name: "model"}},
-    {rowName: 'Гос. номер', props: {labelText: 'Гос. номер', name: "license_plate"}},
+    {rowName: 'Гос. номер', props: {
+        labelText: 'Гос. номер', 
+        name: "license_plate", 
+        maskGenerator: {
+            rules: MY_RULES,
+            generateMask: (value: any) =>
+                (value?.replaceAll('-', '').length ?? 0) <= 8
+                    ? 'C NNN CC NN'
+                    : 'C NNN CC NNN',
+            transform: (v: any) => v?.toUpperCase(),
+        }}
+    },
     {rowName: 'Группа', props: {labelText: 'Группа', name: "group_ids"}},
     {rowName: 'VIN', props: {labelText: 'VIN', name: "vin"}},
     {rowName: 'Терминал мониторинга', props: {labelText: 'Терминал мониторинга', name: "terminal", value: 'ЕГТС', disabled: true}},
     {rowName: 'Уникальный ID', props: {labelText: 'Уникальный ID', name: "hw_id"}},
-    {rowName: 'Номер телефона 1', props: {labelText: 'Номер телефона 1', name: "sim1"}},
-    {rowName: 'Номер телефона 2', props: {labelText: 'Номер телефона 2', name: "sim2"}},
+    {rowName: 'Номер телефона 1', props: {labelText: 'Номер телефона 1', name: "sim1", maskGenerator: createDefaultMaskGenerator('+7 (999) 999 99 99')}},
+    {rowName: 'Номер телефона 2', props: {labelText: 'Номер телефона 2', name: "sim2", maskGenerator: createDefaultMaskGenerator('+7 (999) 999 99 99')}},
 ];
 
-const iconTypes = {
-    blackTruck: {
-        color: '#1B1F26',
-        background: '#F1F5F9',
-        icon: 'truck',
-    },
+// const iconTypes = {
+//     blackTruck: {
+//         color: '#1B1F26',
+//         background: '#F1F5F9',
+//         icon: 'truck',
+//     },
     
-    breezeRoadhelp: {
-        color: '#155E75',
-        background: '#EFF6FF',
-        icon: 'roadhelp',
-    },
+//     breezeRoadhelp: {
+//         color: '#155E75',
+//         background: '#EFF6FF',
+//         icon: 'roadhelp',
+//     },
     
-    purpleCar: {
-        color: '#6366F1',
-        background: '#E0E7FF',
-        icon: 'car',
-    },
+//     purpleCar: {
+//         color: '#6366F1',
+//         background: '#E0E7FF',
+//         icon: 'car',
+//     },
     
-    cyanTruck: {
-        color: '#06B6D4',
-        background: '#ECFEFF',
-        icon: 'truck',
-    },
+//     cyanTruck: {
+//         color: '#06B6D4',
+//         background: '#ECFEFF',
+//         icon: 'truck',
+//     },
     
-    greenRoadhelp: {
-        color: '#10B981',
-        background: '#F0FDFA',
-        icon: 'roadhelp',
-    },
-};
+//     greenRoadhelp: {
+//         color: '#10B981',
+//         background: '#F0FDFA',
+//         icon: 'roadhelp',
+//     },
+// };
+
+const DEVICE_FIELDS = [        
+    "hw_id",
+    "sim1",
+    "sim2",
+];
+
+const VEHICLE_FIELDS = [
+    "license_plate",
+    "make",
+    "model",
+    "vin",
+];
 
 const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
     const [values, setValues] = useState<any>(formSchema.reduce((acc, item) => {
@@ -161,57 +191,53 @@ const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
     const handleUpdate = async () => {
         const {id}= object;
 
-        const {
-            group_ids,
-            hw_id,
-            icon,
-            license_plate,
-            make,
-            model,
-            visible_name,
-            sim1,
-            sim2,
-            terminal,
-            vin,
-        } = values;
+        const group_ids_from_object = object.groups?.map(({id}: Group) => id) || [];
+
+        const nameArr = [ 
+            "group_ids",
+            "hw_id",
+            "icon",
+            "license_plate",
+            "make",
+            "model",
+            "visible_name",
+            "sim1",
+            "sim2",
+            "vin",
+        ];
+
+        let needToUpdate = false;
+
+        const changedValues = nameArr.reduce((acc: any, name) => {
+            if (values[name] !== object[name]) {
+                if (
+                    (name === "group_ids" && !values.group_ids.every((v: number, i: number)=> v === group_ids_from_object[i]))
+                    || name !== "group_ids" 
+                ) {
+
+                    if (DEVICE_FIELDS.includes(name)) {
+                        acc.device = acc.device || {};
+                        
+                        acc.device[name] = values[name];
+                    } else if (VEHICLE_FIELDS.includes(name)) {
+                        acc.vehicle = acc.vehicle || {};
+                        
+                        acc.vehicle[name] = values[name];
+                    } else {   
+                        acc[name] = values[name];
+                    }
+
+                    needToUpdate = true;
+                } 
+            }
+
+            return acc;
+        }, {id});
         
-        const group_ids_from_object = object.groups?.map(({id}: Group) => id);
-        
-        if (
-            hw_id !== object.hw_id ||
-            icon !== object.icon ||
-            license_plate !== object.license_plate ||
-            make !== object.make ||
-            model !== object.model ||
-            visible_name !== object.visible_name ||
-            sim1 !== object.sim1 ||
-            sim2 !== object.sim2 ||
-            vin !== object.vin ||
-            !group_ids.every((v: number, i: number)=> v === group_ids_from_object[i])
-        ) {
-            updateTrigger({
-                id,
-                device: {
-                    hw_id,
-                    vendor: "",
-                    model: "",
-                    protocol: "egts",
-                    sim1,
-                    sim2,
-                },
-                icon,
-                vehicle: {
-                    license_plate,
-                    make,
-                    model,
-                    type: 2,
-                    vin,
-                },
-                group_ids,
-                visible_name,
-            }).then(() => navigate(`/object/${id}`));
+        if (needToUpdate) {
+            updateTrigger(changedValues).then(() => navigate(`/object/${id}`));
         } else {
-            console.log('error');
+            navigate(`/object/${id}`);
         }
     }
 
@@ -224,6 +250,7 @@ const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
                 labelText, 
                 name,
                 disabled,
+                maskGenerator,
             }}, index) => {
                 
                 if (name === 'icon') {
@@ -253,12 +280,16 @@ const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
                                 {rowName}
                             </div>
 
-                            <GroupSelector object={object} onChange={(value) => {
-                                setValues((prevValues: any) => ({
-                                    ...prevValues,
-                                    [name]: value,
-                                }));
-                            }} />
+                            <GroupSelector 
+                                object={object} 
+                                creatable={false}
+                                onChange={(value) => {
+                                    setValues((prevValues: any) => ({
+                                        ...prevValues,
+                                        [name]: value,
+                                    }));
+                                }}
+                            />
                         </div>
                     );
                 }
@@ -275,7 +306,8 @@ const Form = ({mode, object = {}}: {mode: string, object?: any}) => {
                             className={styles.input} 
                             labelText={labelText} 
                             name={name}
-                            value={values[name]}
+                            defaultValue={values[name]}
+                            maskGenerator={maskGenerator}
                             onChange={(value: any) => {
                                 setValues((prevValues: any) => ({
                                     ...prevValues,

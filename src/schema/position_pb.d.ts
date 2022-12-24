@@ -128,23 +128,23 @@ export namespace AnSensor {
   }
 }
 
-export class Unit extends jspb.Message {
-  getObjectIdsList(): Array<string>;
-  setObjectIdsList(value: Array<string>): Unit;
-  clearObjectIdsList(): Unit;
-  addObjectIds(value: string, index?: number): Unit;
+export class PositionReq extends jspb.Message {
+  getUnitIdsList(): Array<string>;
+  setUnitIdsList(value: Array<string>): PositionReq;
+  clearUnitIdsList(): PositionReq;
+  addUnitIds(value: string, index?: number): PositionReq;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Unit.AsObject;
-  static toObject(includeInstance: boolean, msg: Unit): Unit.AsObject;
-  static serializeBinaryToWriter(message: Unit, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Unit;
-  static deserializeBinaryFromReader(message: Unit, reader: jspb.BinaryReader): Unit;
+  toObject(includeInstance?: boolean): PositionReq.AsObject;
+  static toObject(includeInstance: boolean, msg: PositionReq): PositionReq.AsObject;
+  static serializeBinaryToWriter(message: PositionReq, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): PositionReq;
+  static deserializeBinaryFromReader(message: PositionReq, reader: jspb.BinaryReader): PositionReq;
 }
 
-export namespace Unit {
+export namespace PositionReq {
   export type AsObject = {
-    objectIdsList: Array<string>,
+    unitIdsList: Array<string>,
   }
 }
 

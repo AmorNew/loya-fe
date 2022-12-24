@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 
 import styles from './ObjectListFilters.module.scss';
 import { selectSearchParams, setSearchParams } from "../../../../../app/reducers/dataReducer";
 import { useAppDispatch, useAppSelector } from "../../../../../app/hooks";
 import Icon from "../../../../ui/Icon";
+import GroupSelector from "../../../GroupSelector";
+import { selectAllGroups } from "../../../../../app/api/loyaBackendAPI";
+// import Modal from "../../../Modal";
 
 
 const ObjectListFilters = () => {
@@ -26,15 +29,17 @@ const ObjectListFilters = () => {
         dispatch(setSearchParams({order_direction: order_direction === 'asc' ? 'desc' : 'asc' }));
     };
 
+    const handleGroupSelect = (group_ids: number[]) => {
+        dispatch(setSearchParams({group_ids}));
+    };
+
     return (
         <div className={styles.root}>
-            <div className={styles.filterButton}>
-                <Icon 
-                    type='filter' 
-                    color='grey' 
-                    className={styles.filterIcon} 
-                />
-            </div>
+            <GroupSelector 
+                creatable={false}
+                filter={true}
+                onChange={handleGroupSelect}
+            />
             
             <div className={styles.filterInputWrapper}>
                 <input 

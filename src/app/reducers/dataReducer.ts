@@ -16,6 +16,8 @@ export type SearchParams = {
       lon: number,
     }
   },
+  group_ids?: number[],
+  useCoordinates?: boolean,
   order_by?: string,
   order_direction?: string,
 }
