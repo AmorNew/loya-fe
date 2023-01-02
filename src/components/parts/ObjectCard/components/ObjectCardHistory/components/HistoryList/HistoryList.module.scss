@@ -10,3 +10,22 @@
 
     overflow: auto;
 }
+
+.dateDay {
+    /* Auto layout */
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 4px 12px;
+    gap: 10px;
+
+    // width: 99px;
+    height: 28px;
+
+    /* Control BG/Gray */
+
+    background: #F1F5F9;
+    border-radius: 50px;
+    align-self: flex-start;
+}

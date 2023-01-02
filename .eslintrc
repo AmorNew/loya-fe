@@ -1,0 +1,29 @@
+{
+  "extends": ["react-app", "react-app/jest"],
+  "plugins": ["prettier"],
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
+  "rules": {
+    "prettier/prettier": [2, { "endOfLine": "auto" }],
+    "import/order": [
+      2,
+      {
+        "pathGroups": [
+          {
+            "pattern": "@src/**",
+            "group": "type"
+          }
+        ],
+        "groups": ["external", "builtin", "index", "parent", "internal", "sibling", "type"],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        },
+        "newlines-between": "always-and-inside-groups"
+      }
+    ]
+  }
+}

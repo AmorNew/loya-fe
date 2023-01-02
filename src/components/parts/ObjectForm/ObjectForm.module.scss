@@ -20,6 +20,8 @@
 .form {
     width: 100%;
 
+    overflow: auto;
+
     &.locked {
         opacity: 0.5;
         pointer-events: none;
@@ -53,4 +55,256 @@
 
 .input {
     flex-grow: 1;
+}
+
+
+.container {
+    flex-grow: 1;
+    margin: 8px 0;
+}
+
+div.control {
+    border-radius: 4px;
+    border: 1px solid #E1E4EB;
+    box-shadow: none;
+    min-height: 32px;
+
+    &:hover {
+        border: 1px solid #E1E4EB;
+    }
+
+    &.focused {
+        border-radius: 4px;
+        border: 1px solid #155E75;
+        box-shadow: none;
+    
+        &:hover {
+            border: 1px solid #155E75;
+        }
+    }
+
+    &.filter {
+        height: 48px;
+        width: 48px;
+
+        &.selected {
+            border: 1px solid #155E75;
+        }
+    }
+}
+
+.multiValue {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+    &:before {
+        display: block;
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-left: 6px;
+    }
+
+    &.type-0:before {
+        background: #1B1F26;
+    }
+    &.type-1:before {
+        background: #155E75;
+    }
+    &.type-2:before {
+        background: #6366F1;
+    }
+    &.type-3:before {
+        background: #06B6D4;
+    }
+    &.type-4:before {
+        background: #10B981;
+    }
+    &.type-5:before {
+        background: #FDCA4C;
+    }
+}
+
+div.remove {
+    cursor: pointer;
+
+    &:hover {
+        background-color: initial;
+        color: initial;
+    }
+}
+
+div.indicator {
+    padding: 4px;
+    cursor: pointer;
+}
+
+div.filterDropdownIndicator {
+    // opacity: 0;
+    // position: absolute;
+    cursor: pointer;
+
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+div.filterIndicators {
+    // position: absolute;
+    // width: 100%;
+    // height: 100%;
+    // opacity: 0;
+
+    cursor: pointer;
+
+    // opacity: 0;
+    // position: absolute;
+}
+
+div.hiddenIndicator {
+    display: none;
+}
+
+span.hiddenIndicator {
+    display: none;
+}
+
+div.hiddenIndicatorSeparator {
+    display: none;
+}
+
+div.valueContainer {
+    padding-left: 5px;
+}
+
+div.hiddenValueContainer {
+    opacity: 0;
+    top: -1000px;
+    position: absolute;
+}
+
+div.placeholder {
+    font-feature-settings: "cv04" on, "ss03" on, "ss09" on;
+    color: #929BAD;
+    height: 20px;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+div.option {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+
+    gap: 8px;
+
+    cursor: pointer;
+
+    &.selected {
+        // order: -1;
+        background: none;
+        color: initial;
+    
+        &:after {
+            display: block;
+            content: '✓';
+            margin-left: auto;
+        }
+    }
+
+    &.focused {
+        background-color: #E9EBF0;
+    }
+
+    &:before {
+        display: block;
+        content: '';
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: transparent;
+    }
+
+    &.type-0:before {
+        background: #1B1F26;
+    }
+    &.type-1:before {
+        background: #155E75;
+    }
+    &.type-2:before {
+        background: #6366F1;
+    }
+    &.type-3:before {
+        background: #06B6D4;
+    }
+    &.type-4:before {
+        background: #10B981;
+    }
+    &.type-5:before {
+        background: #FDCA4C;
+    }
+}
+
+div.menu {
+    width: 298px;
+    z-index: 10;
+}
+
+div.menuList {
+    display: flex;
+    
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.filterButton {
+    box-sizing: border-box;
+
+    width: 48px;
+    height: 48px;
+
+    /* System BG/White */
+
+    background: #FFFFFF;
+    /* System Graph/Line Gray */
+
+    border: 1px solid #E1E4EB;
+    border-radius: 4px;
+    
+    display: flex;
+
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+
+    &.selected {
+        border: 1px solid #155E75;
+    }
+}
+
+div.singleValue {
+    font-family: "IBM Plex Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    font-feature-settings: "cv04" on, "ss03" on, "ss09" on;
+    color: #1B1F26;
 }

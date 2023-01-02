@@ -8,6 +8,7 @@
     background: #FFFFFF;
     
     border: 1px solid #E1E4EB;
+
     border-radius: 4px;
     margin: 8px 0;
     
@@ -41,6 +42,11 @@
         background-color: #E1E4EB;
         border: 1px solid #E1E4EB;
         cursor: default;
+    }
+
+    &.error {
+        border: 1px solid #EF4444;
+        margin-bottom: 34px;
     }
 }
 
@@ -199,4 +205,29 @@ input:-webkit-autofill:focus {
 
 .hidden {
     display: none;
+}
+
+.errorText {
+    /* Caption 1 */
+
+    font-family: 'IBM Plex Sans';
+
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 14px;
+    /* identical to box height, or 127% */
+
+    display: flex;
+    align-items: center;
+    font-feature-settings: 'cv04' on, 'ss03' on, 'ss09' on;
+
+    /* System Text/Red */
+
+    color: #EF4444;
+
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
 }

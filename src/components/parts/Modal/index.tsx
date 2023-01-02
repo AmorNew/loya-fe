@@ -1,50 +1,40 @@
-import React, { MouseEventHandler, ReactNode, useEffect, useRef, useState } from "react";
-import cn from 'classnames';
+import cn from 'classnames'
+import { MouseEventHandler, ReactNode, useRef } from 'react'
 
-import styles from './Modal.module.scss';
-
+import styles from './Modal.module.scss'
 
 type Props = {
-    show: boolean,
-    withParanja?: boolean,
-    onClose: () => void,
-    children: ReactNode;
-    
+    show: boolean
+    withParanja?: boolean
+    onClose: () => void
+    children: ReactNode
 }
 
-const Modal = ({
-    show, 
-    withParanja = true,
-    onClose, 
-    children
-}: Props) => {
-    const ref = useRef(null);
+const Modal = ({ show, withParanja = true, onClose, children }: Props) => {
+    const ref = useRef(null)
 
     if (!show) {
-        return null;
+        return null
     }
 
     const handleClick: MouseEventHandler = (event) => {
         if (ref.current && ref.current === event.target) {
-            onClose();
+            onClose()
         }
     }
 
     return (
-        <div 
-            ref={ref} 
+        <div
+            ref={ref}
             className={cn({
                 [styles.root]: true,
                 [styles.paranja]: withParanja,
-            })} 
+            })}
             onClick={handleClick}
         >
-            <div className={styles.content}>
-                {children}
-            </div>
+            <div className={styles.content}>{children}</div>
         </div>
-    );
+    )
 }
 
-export default Modal;
-
+export default Modal

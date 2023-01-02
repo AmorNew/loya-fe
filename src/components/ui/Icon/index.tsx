@@ -1,41 +1,39 @@
-import React from "react";
-import cn from 'classnames';
+import cn from 'classnames'
+import React from 'react'
 
-import { ReactComponent as TruckIcon } from './icons/truck.svg';
-import { ReactComponent as ExitIcon } from './icons/exit.svg';
-import { ReactComponent as MapsIcon } from './icons/maps.svg';
-import { ReactComponent as EditIcon } from './icons/edit.svg';
-import { ReactComponent as DeleteIcon } from './icons/delete.svg';
-import { ReactComponent as LocationIcon } from './icons/location.svg';
-import { ReactComponent as ExclamationIcon } from './icons/exclamation.svg';
-import { ReactComponent as CarIcon } from './icons/car.svg';
-import { ReactComponent as RoadhelpIcon } from './icons/roadhelp.svg';
-import { ReactComponent as SearchIcon } from './icons/search.svg';
-import { ReactComponent as FilterIcon } from './icons/filter.svg';
-import { ReactComponent as SortASCIcon } from './icons/sort_ASC.svg';
-import { ReactComponent as SortDESCIcon } from './icons/sort_DESC.svg';
-import { ReactComponent as CrossIcon } from './icons/cross.svg';
-import { ReactComponent as ArrowUpIcon } from './icons/arrow-up.svg';
-import { ReactComponent as ArrowDownIcon } from './icons/arrow-down.svg';
-import { ReactComponent as EngineIcon } from './icons/engine.svg';
-import { ReactComponent as MileageIcon } from './icons/mileage.svg';
-import { ReactComponent as TimerIcon } from './icons/timer.svg';
-import { ReactComponent as TransmissionIcon } from './icons/transmission.svg';
+import styles from './Icon.module.scss'
+import { ReactComponent as ArrowDownIcon } from './icons/arrow-down.svg'
+import { ReactComponent as ArrowUpIcon } from './icons/arrow-up.svg'
+import { ReactComponent as CarIcon } from './icons/car.svg'
+import { ReactComponent as CrossIcon } from './icons/cross.svg'
+import { ReactComponent as DeleteIcon } from './icons/delete.svg'
+import { ReactComponent as EditIcon } from './icons/edit.svg'
+import { ReactComponent as EngineIcon } from './icons/engine.svg'
+import { ReactComponent as ExclamationIcon } from './icons/exclamation.svg'
+import { ReactComponent as ExitIcon } from './icons/exit.svg'
+import { ReactComponent as FilterIcon } from './icons/filter.svg'
+import { ReactComponent as LocationIcon } from './icons/location.svg'
+import { ReactComponent as MapsIcon } from './icons/maps.svg'
+import { ReactComponent as MileageIcon } from './icons/mileage.svg'
+import { ReactComponent as RoadhelpIcon } from './icons/roadhelp.svg'
+import { ReactComponent as SearchIcon } from './icons/search.svg'
+import { ReactComponent as SortASCIcon } from './icons/sort_ASC.svg'
+import { ReactComponent as SortDESCIcon } from './icons/sort_DESC.svg'
+import { ReactComponent as TimerIcon } from './icons/timer.svg'
+import { ReactComponent as TransmissionIcon } from './icons/transmission.svg'
+import { ReactComponent as TruckIcon } from './icons/truck.svg'
 
-import styles from './Icon.module.scss';
-
-
-export type IconColor = 'black' | 'breeze' | 'purple' | 'cyan' | 'green' | 'white' | 'grey' | 'yellow';
+export type IconColor = 'black' | 'breeze' | 'purple' | 'cyan' | 'green' | 'white' | 'grey' | 'yellow'
 
 type Props = {
-    className?: string, 
-    type: IconType, 
-    color?: IconColor,
-    size?: 's' | 'm' | 'l', 
+    className?: string
+    type: IconType
+    color?: IconColor
+    size?: 's' | 'm' | 'l'
     onClick?: () => void
-};
+}
 
-export type IconType = 
+export type IconType =
     | 'truck'
     | 'exit'
     | 'maps'
@@ -60,73 +58,63 @@ export type IconType =
     | 'sortDESC'
     | 'arrow-up'
     | 'arrow-down'
-;
 
-const IconSVG = ({type}: {type: IconType}): any => {
-    switch(type) {
+const IconSVG = ({ type }: { type: IconType }): any => {
+    switch (type) {
         case 'truck':
-            return <TruckIcon />;
+            return <TruckIcon />
         case 'exit':
-            return <ExitIcon />;
+            return <ExitIcon />
         case 'maps':
-            return <MapsIcon />;
+            return <MapsIcon />
         case 'edit':
-            return <EditIcon />;
+            return <EditIcon />
         case 'delete':
-            return <DeleteIcon />;
+            return <DeleteIcon />
         case 'location':
-            return <LocationIcon />;
+            return <LocationIcon />
         case 'exclamation':
-            return <ExclamationIcon />;
+            return <ExclamationIcon />
         case 'car':
-            return <CarIcon />;
+            return <CarIcon />
         case 'roadhelp':
-            return <RoadhelpIcon />;
+            return <RoadhelpIcon />
         case 'search':
-            return <SearchIcon />;
+            return <SearchIcon />
         case 'filter':
-            return <FilterIcon />;
+            return <FilterIcon />
         case 'sortASC':
-            return <SortASCIcon />;
+            return <SortASCIcon />
         case 'sortDESC':
-            return <SortDESCIcon />;
+            return <SortDESCIcon />
         case 'cross':
-            return <CrossIcon />;
+            return <CrossIcon />
         case 'arrow-up':
-            return <ArrowUpIcon />;
+            return <ArrowUpIcon />
         case 'arrow-down':
-            return <ArrowDownIcon />;
+            return <ArrowDownIcon />
         case 'engine':
-            return <EngineIcon />;
+            return <EngineIcon />
         case 'mileage':
-            return <MileageIcon />;
+            return <MileageIcon />
         case 'timer':
-            return <TimerIcon />;
+            return <TimerIcon />
         case 'transmission':
-            return <TransmissionIcon />;
+            return <TransmissionIcon />
     }
 }
 
-const Icon = ({
-    className, 
-    type, 
-    color = 'white',
-    size = 'm', 
-    onClick
-}: Props) => {
+const Icon = ({ className, type, color = 'white', size = 'm', onClick }: Props) => {
     return (
-        <i className={cn(
-            styles.root, 
-            className, 
-            styles[color],
-            styles[size],
-            {
-                [styles.clickable]: !!onClick
-            }
-        )} onClick={onClick}>
-           <IconSVG type={type} />
+        <i
+            className={cn(styles.root, className, styles[color], styles[size], {
+                [styles.clickable]: !!onClick,
+            })}
+            onClick={onClick}
+        >
+            <IconSVG type={type} />
         </i>
-    );
+    )
 }
 
-export default Icon;
+export default Icon

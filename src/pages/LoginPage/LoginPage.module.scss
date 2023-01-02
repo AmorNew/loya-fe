@@ -22,18 +22,44 @@
     }
 }
 
-.form h2 {
-    font-family: 'IBM Plex Sans';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 35px;
-    line-height: 40px;
-
-    font-feature-settings: 'cv04' on, 'ss03' on, 'ss09' on;
-
-    color: #1B1F26;
+.header {
+    
     margin: 0 0 40px 0;
-    text-align: center;
+    
+    h2 {
+        font-family: 'IBM Plex Sans';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 35px;
+        line-height: 40px;
+
+        font-feature-settings: 'cv04' on, 'ss03' on, 'ss09' on;
+
+        margin: 0;
+
+        color: #1B1F26;
+        text-align: center;
+    }
+
+    .error {
+        text-align: center;
+
+        /* Body 1 */
+
+        font-family: 'IBM Plex Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 24px;
+        /* or 133% */
+
+        text-align: center;
+        font-feature-settings: 'cv04' on, 'ss03' on, 'ss09' on;
+
+        /* System Text/Black */
+
+        color: #1B1F26;
+    }
 }
 
 .formHead {

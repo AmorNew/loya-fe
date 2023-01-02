@@ -1,14 +1,10 @@
-import React from "react";
-import cn from 'classnames';
+import cn from 'classnames'
+import React from 'react'
 
-import styles from './ObjectCardWrapper.module.css';
+import styles from './ObjectCardWrapper.module.css'
 
-const ObjectCardWrapper = ({children}: {children: React.ReactNode}) => {
-    return (
-        <div className={cn(styles.root)}>
-            {children}
-        </div>
-    );
+const ObjectCardWrapper = ({ children }: { children: React.ReactNode }) => {
+    return <div className={cn(styles.root)}>{children}</div>
 }
 
-export default ObjectCardWrapper;
+export default ObjectCardWrapper

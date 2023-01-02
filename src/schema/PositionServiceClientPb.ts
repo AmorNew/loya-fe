@@ -10,7 +10,6 @@
 // 	protoc              v3.19.6
 // source: position.proto
 
-
 /* eslint-disable */
 // @ts-nocheck
 

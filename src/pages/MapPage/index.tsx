@@ -1,23 +1,24 @@
-import React from 'react';
+import React from 'react'
 
-import SideBar from '../../components/parts/SideBar';
-import ObjectList from '../../components/parts/ObjectList';
-import Object from '../../components/parts/Object';
-import Map from '../../components/parts/Map';
+import Map from '../../components/parts/Map'
+import Object from '../../components/parts/Object'
+import ObjectList from '../../components/parts/ObjectList'
+import SideBar from '../../components/parts/SideBar'
 
-import styles from './MapPage.module.scss';
+import styles from './MapPage.module.scss'
 
+const MapPage = (): JSX.Element => {
+    return (
+        <div className={styles.layout}>
+            <SideBar />
 
-export default function MapPage() {
-  return(
-    <div className={styles.layout}>
-      <SideBar />
+            <ObjectList hideAddObjectButton={true} />
 
-      <ObjectList hideAddObjectButton={true} />
+            <Object />
 
-      <Object />
-
-      <Map />
-    </div>
-  );
+            <Map />
+        </div>
+    )
 }
+
+export default MapPage

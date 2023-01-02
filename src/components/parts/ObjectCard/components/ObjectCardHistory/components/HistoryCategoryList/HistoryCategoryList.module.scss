@@ -1,0 +1,63 @@
+.root {
+    display: flex;
+
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-between;
+}
+
+.chips {
+    box-sizing: border-box;
+    user-select: none;
+    cursor: pointer;
+
+    /* Chips */
+
+
+    /* Auto layout */
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 12px;
+    gap: 6px;
+
+    height: 32px;
+
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+
+    text-align: center;
+    font-feature-settings: 'cv04' on, 'ss03' on, 'ss09' on;
+
+    /* System Text/White */
+    color: #555E70;
+    
+
+    /* System Graph/White */
+
+    background: #FFFFFF;
+    border-radius: 100px;
+
+    /* Body 2 */
+
+
+
+    &.current {
+        /* System Text/Gray */
+
+        min-width: 142px;
+        
+        color: #FFFFFF;
+        background: #155E75;
+        border-radius: 100px;
+    }
+
+}
+
